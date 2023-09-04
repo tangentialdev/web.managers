@@ -209,7 +209,7 @@ class xFormElement extends xUILog{
     }
     #getValue(){ //Need to Finish
         switch(this.#tagName){
-            case 'select':
+            case 'SELECT':
                 return this.#element.value;
                 break;
             case 'input':
