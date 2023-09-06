@@ -25,10 +25,10 @@ class queue {
       this.#cycle();
     });
   }
-  start(){
-    this.#cycle().catch((error) =>{
+  start() {
+    this.#cycle().catch((error) => {
       super.log(error);
-      });
+    });
   }
   #cycle() {
     for (i = this.#queue.length - 1; i < this.#maxThreads; i++) {
