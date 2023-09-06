@@ -19,11 +19,16 @@ class queue {
       ? this.#queue.push(func)
       : this.#stagingQueue.push(func);
   }
-  start() {
+  startUnique() {
     this.#queue[0]().then(() => {
       this.#queue.unshift();
       this.#cycle();
     });
+  }
+  start(){
+    this.#cycle().catch((error) =>{
+      super.log(error);
+      });
   }
   #cycle() {
     for (i = this.#queue.length - 1; i < this.#maxThreads; i++) {
