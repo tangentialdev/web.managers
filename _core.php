@@ -18,7 +18,7 @@
         }
         public function __get($name){
             switch($name){
-                case 'derverName':
+                case 'serverName':
                     return $this->serverName();
                 case 'username':
                     return $this->username();
