@@ -31,7 +31,11 @@ class queue {
     });
   }
   #cycle() {
-    for (i = this.#queue.length - 1; i < Math.max(this.#maxThreads, this.#stagingQueue.length); i++) {
+    for (
+      i = this.#queue.length - 1;
+      i < Math.min(this.#maxThreads, this.#stagingQueue.length);
+      i++
+    ) {
       this.#queue.push(this.#stagingQueue.unshift());
       let p = this.#queue[i]().then(() => {
         this.#queue.indexof(p).remove();
