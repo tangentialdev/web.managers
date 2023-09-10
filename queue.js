@@ -9,7 +9,7 @@ class queue {
     this.#maxThreads = 50;
     this.#startfunction = async () => {
       console.log(" no start function set");
-    }
+    };
   }
   get maxThreads() {
     //-> int
