@@ -1,4 +1,13 @@
-class queue {
+class xQueueLog {
+  
+  constructor(){
+    
+  }
+  
+}
+
+
+class xQueue extends xQueueLog {
   #queue;
   #stagingQueue;
   #maxThreads;
