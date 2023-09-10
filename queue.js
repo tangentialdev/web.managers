@@ -1,6 +1,8 @@
 class queue {
   #queue;
   #stagingQueue;
+  #maxThreads;
+  #startfunction;
   constructor() {
     this.#queue = [];
     this.#stagingQueue = [];
@@ -12,6 +14,9 @@ class queue {
   }
   set maxThreads(value) {
     this.#maxThreads = value;
+  }
+  set startfunction(value){
+    this.#startfunction = value;
   }
   add(func /*function*/) {
     //-> void
