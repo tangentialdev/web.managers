@@ -1,5 +1,8 @@
 class xQueueLog {
-  constructor() {}
+  #name
+  constructor(name) {}
+  this.#name=name
+  
 }
 
 class xQueue extends xQueueLog {
@@ -8,7 +11,7 @@ class xQueue extends xQueueLog {
   #stagingQueue;
   #maxThreads;
   #startfunction;
-  constructor(name='xQueue') {
+  constructor(name = "xQueue") {
     super(name);
     this.#queue = [];
     this.#stagingQueue = [];
