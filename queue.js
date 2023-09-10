@@ -3,6 +3,9 @@ class xQueueLog {
   #framework;
   constructor(name) {}
     this.#name = name;
+    this.#framework = document.createElement('div');
+    this.#framework.innerHtml = '';
+    console.log(this.#framework);
   }
   log(msg /*variant*/){
     
