@@ -7,6 +7,9 @@ class queue {
     this.#queue = [];
     this.#stagingQueue = [];
     this.#maxThreads = 50;
+    this.#startfunction = async () => {
+      console.log(" no start function set");
+    }
   }
   get maxThreads() {
     //-> int
@@ -32,7 +35,8 @@ class queue {
       this.#cycle();
     });
   }
-  start() { //-> void
+  start() {
+    //-> void
     this.#cycle().catch((error) => {
       super.log(error);
     });
