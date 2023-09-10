@@ -2,7 +2,10 @@ class xQueueLog {
   #name
   constructor(name) {}
   this.#name = name;
-  
+}
+  log(msg /*variant*/){
+    
+  }
 }
 
 class xQueue extends xQueueLog {
