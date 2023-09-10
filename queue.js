@@ -12,10 +12,10 @@ class queue {
     //-> int
     return this.#maxThreads;
   }
-  set maxThreads(value /*int*/) {
+  set maxThreads(value /*int*/) { //-> void
     this.#maxThreads = value;
   }
-  set startfunction(value /*function*/) {
+  set startfunction(value /*function*/) { //-> void
     this.#startfunction = value;
   }
   add(func /*function*/) {
