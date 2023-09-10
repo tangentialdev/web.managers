@@ -1,31 +1,48 @@
 class xQueueLog {
-  #name;
+  #oName;
   #framework;
-  constructor(name) {}
-    this.#name = name;
+  constructor(oName /*string*/) {
+    this.#name = oName;
+    this.#loggingEnabled = false;
     this.#framework = document.createElement('div');
-    this.#framework.innerHtml = '';
-    console.log(this.#framework);
+    this.#framework.innerHTML = '<div class=\"card-header\">'+
+                                    '<div class=\"d-flex justify-content-between\">'+
+                                    '</div>'
+                                "</div>" +
+                                '<div class=\"card-body\">'+
+                                    '<ul class=\"list-group\">' +
+                                        '<li class=\"list-group-item\">' +
+                                        '</li>' +
+                                    '</ul>' +
+                                '</div>';
+    (this.#loggingEnabled) ? console.log(this.#framework): '';
   }
-  log(msg /*variant*/){
+  get name(){ //-> string
+    return this.#oName;
+  }
+  log(msg /*string || JSON*/){
     
   }
 }
 
 class xQueue extends xQueueLog {
-  #name;
+  #oName;
   #queue;
   #stagingQueue;
   #maxThreads;
   #startfunction;
-  constructor(name = "xQueue") {
-    super(name);
+  constructor(oName = "xQueue" /*string*/) {
+    super(oName);
+    this.#oName = oName;
     this.#queue = [];
     this.#stagingQueue = [];
     this.#maxThreads = 50;
     this.#startfunction = async () => {
       console.log(" no start function set");
     };
+  }
+  get name(){ //-> string
+    return this.#oName;
   }
   get maxThreads() {
     //-> int
