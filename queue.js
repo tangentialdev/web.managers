@@ -34,7 +34,7 @@ class queue {
       super.log(error);
     });
   }
-  #cycle() {
+  #cycle() { //- void
     for (
       i = this.#queue.length - 1;
       i < Math.min(this.#maxThreads, this.#stagingQueue.length);
