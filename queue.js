@@ -1,8 +1,8 @@
 class xQueueLog {
   #name
   constructor(name) {}
-  this.#name = name;
-}
+    this.#name = name;
+  }
   log(msg /*variant*/){
     
   }
