@@ -3,12 +3,13 @@ class xQueueLog {
 }
 
 class xQueue extends xQueueLog {
+  #name;
   #queue;
   #stagingQueue;
   #maxThreads;
   #startfunction;
-  constructor() {
-    super();
+  constructor(name='xQueue') {
+    super(name);
     this.#queue = [];
     this.#stagingQueue = [];
     this.#maxThreads = 50;
