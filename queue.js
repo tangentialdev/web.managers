@@ -15,7 +15,7 @@ class queue {
   set maxThreads(value) {
     this.#maxThreads = value;
   }
-  set startfunction(value) {
+  set startfunction(value /*function*/) {
     this.#startfunction = value;
   }
   add(func /*function*/) {
@@ -34,7 +34,8 @@ class queue {
       super.log(error);
     });
   }
-  #cycle() { //- void
+  #cycle() {
+    //- void
     for (
       i = this.#queue.length - 1;
       i < Math.min(this.#maxThreads, this.#stagingQueue.length);
