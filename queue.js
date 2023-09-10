@@ -26,12 +26,13 @@ class queue {
       ? this.#queue.push(func)
       : this.#stagingQueue.push(func);
   }
-  startUnique() { //-> void
+  startUnique() {
+    //-> void
     this.#startfunction().then(() => {
       this.#cycle();
     });
   }
-  start() {
+  start() { //-> void
     this.#cycle().catch((error) => {
       super.log(error);
     });
