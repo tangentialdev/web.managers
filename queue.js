@@ -12,10 +12,12 @@ class queue {
     //-> int
     return this.#maxThreads;
   }
-  set maxThreads(value /*int*/) { //-> void
+  set maxThreads(value /*int*/) {
+    //-> void
     this.#maxThreads = value;
   }
-  set startfunction(value /*function*/) { //-> void
+  set startfunction(value /*function*/) {
+    //-> void
     this.#startfunction = value;
   }
   add(func /*function*/) {
@@ -24,7 +26,7 @@ class queue {
       ? this.#queue.push(func)
       : this.#stagingQueue.push(func);
   }
-  startUnique() {
+  startUnique() { //-> void
     this.#startfunction().then(() => {
       this.#cycle();
     });
