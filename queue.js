@@ -15,7 +15,7 @@ class queue {
   set maxThreads(value) {
     this.#maxThreads = value;
   }
-  set startfunction(value){
+  set startfunction(value) {
     this.#startfunction = value;
   }
   add(func /*function*/) {
@@ -25,8 +25,7 @@ class queue {
       : this.#stagingQueue.push(func);
   }
   startUnique() {
-    this.#queue[0]().then(() => {
-      this.#queue.unshift();
+    this.#startfunction().then(() => {
       this.#cycle();
     });
   }
