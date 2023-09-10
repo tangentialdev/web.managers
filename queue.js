@@ -1,5 +1,6 @@
 class xQueueLog {
-  #name
+  #name;
+  #framework;
   constructor(name) {}
     this.#name = name;
   }
