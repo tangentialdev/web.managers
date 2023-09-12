@@ -2,7 +2,7 @@ class xUITools{
     constructor(){
     }
     get id(){ //string
-        return (new Date.getTime() + Math.random()*10000).toString(16);
+        return (new Date().getTime() + Math.random()*10000).toString(16);
     }
 }
 
@@ -11,11 +11,11 @@ class xUILog {
     constructor(source/*string*/){ //->  #void
         this.#source = source;
         this.#log = [];
-        this.#loggingEnabled = false; 
+        this.#loggingEnabled = configuration.UI_LOGGING_ENABLED; 
         this.#id = new xUITools().id;
         this.#frame = document.createElement('div');
-        this.#frame.innerHTML = '<div class=\"error-wrapper\">' + //Need to add Bootstrap classes to this
-                                    '<div class=\"log-header\">'
+        this.#frame.innerHTML = '<div class=\"card\">' + //Need to add Bootstrap classes to this
+                                    '<div class=\"card-header\">' + 
                                         '<div class=\"log-length\">'+ this.#log.length + 
                                         '</div>' +
                                         '<div class=\"source\">' + this.#source + 
@@ -23,7 +23,7 @@ class xUILog {
                                         '<div class=\"id\">' + this.#id + 
                                         '</div>' +
                                     '</div>' +
-                                    '<div class=\"log-body\">'+
+                                    '<div class=\"card-body\">'+
                                         '<table class=\"table table-striped\">' +
                                             '<thead>' +
                                                 '<tr>' +
@@ -37,7 +37,7 @@ class xUILog {
                                         '</table>' +
                                     '</div>' +
                                 '</div>';
-        console.log(this.#frame);
+        document.getElementById(configuration.ERROR_LOG_DOCUMENT_ID).appendChild(this.#frame);
     }
     get source(){ //-> htmlElement
         return this.#source;
@@ -274,22 +274,24 @@ class xForm extends xUILog{
 }
 
 class xHTMLPane extends xUILog{
-    #visible; #element;
+    #visible; #element; #display;
     constructor(element /*htmlElement*/){ //-> void
         super('xHTMLPane');
         this.#element = element;
-        this.#visible = !(this.#element.style.display == 'none');
+        this.#display = this.#element.style.display;
+        this.#element.style.display = 'none';
+        this.#visible = false;
     }
     get visible(){ //-> boolean
         return this.#visible;
     }
     set visible(value /*boolean*/){ //-> void
         this.#visible = value;
-        (value) ? this.#element.style.display = '' : this.#element.style.display = 'None';
+        (value) ? this.#element.style.display = this.#display : this.#element.style.display = 'none';
     }
     activate(){ //-> void
         this.#visible = true;
-        this.#element.style.display = '';
+        this.#element.style.display = this.#display;
     }
     hide(){ //-> void
         this.#visible = false;
@@ -299,7 +301,7 @@ class xHTMLPane extends xUILog{
 
 class xHTMLPane_Trigger extends xUILog{
     #element; #event;
-    constructor(element){ //-> void
+    constructor(element/*htmlElement*/){ //-> void
         super('xHTMLPane_Trigger');
         this.#element = element;
         this.#event;
@@ -330,19 +332,22 @@ class xHTMLPane_Manager extends xUILog{
     getItem(key /*string*/){ //-> xHTMLPane
         return this.#catalog[key];
     }
-    setItem(key /*string*/, value /*xHTMLPane*/){ //-> void
+    setItem(key /*string*/, value /*JSON*/){ //-> void
         this.#catalog[key] = value;
+        this.#catalog[key]['Trigger'].element.addEventListener('click',()=>{
+            this.activate(key);
+        });
     }
     activate(key /*string*/){ //-> void
-        this.#activePane.hide();
-        this.#catalog[key].activate();
+        (this.#activePane != null) ? this.#activePane['Pane'].hide(): super.log('No Active Pane Set');
+        this.#catalog[key]['Pane'].activate();
         this.#activePane = this.#catalog[key];
     }
     
 }
 
 class xEventListener extends xUILog{
-    #element; #type; #event;
+    #element; #type; #event; #eventAction
     constructor(element /*htmlElement*/, type /*string*/){ //-> void
         super('xEventListener');
         this.#element = element;
