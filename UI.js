@@ -346,6 +346,10 @@ class xHTMLPane_Manager extends xUILog{
     
 }
 
+class xHTMLCanvas{
+  
+}
+
 class xEventListener extends xUILog{
     #element; #type; #event; #eventAction
     constructor(element /*htmlElement*/, type /*string*/){ //-> void
