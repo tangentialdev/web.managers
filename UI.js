@@ -346,9 +346,10 @@ class xHTMLPane_Manager extends xUILog{
     
 }
 
-class xHTMLOffCanvas{
+class xHTMLOffCanvas extends xUILog{
     #wrapper; #triggers; #body; #id; #dismisses;
     constructor(wrapper /*htmlElement*/, dismiss /*htmlElement*/, trigger/*htmlElement*/){ //->xHTMLOffCanvas;
+        super('xHTMLOffCanvas');
         this.#wrapper = wrapper;
         this.#dismisses = [dismiss];
         this.#triggers = [trigger];
