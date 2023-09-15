@@ -321,7 +321,7 @@ class xHTMLPane_Trigger extends xUILog{
 
 class xHTMLPane_Manager extends xUILog{
     #catalog; #activePane;
-    constructor(){ //-> void
+    constructor(){ //-> xHTMLPane_Manager
         super('xHTMLPane_Manger');
         this.#catalog = {};
         this.#activePane;
@@ -346,8 +346,43 @@ class xHTMLPane_Manager extends xUILog{
     
 }
 
-class xHTMLCanvas{
-  
+class xHTMLOffCanvas{
+    #wrapper; #triggers; #body; #id; #dismisses;
+    constructor(wrapper /*htmlElement*/, dismiss /*htmlElement*/, trigger/*htmlElement*/){ //->xHTMLOffCanvas;
+        this.#wrapper = wrapper;
+        this.#dismisses = [dismiss];
+        this.#triggers = [trigger];
+        this.#body = this.#wrapper;
+        (this.#wrapper.id.length > 0) ? this.#id = this.#wrapper.id: this.#id = new xUITools().id;
+        this.#trigger.setAttribute('data-bs-toggle', this.#id);
+        (this.#dismiss.getAttribute('data-bs-dismiss') == null) ? this.#dismiss.setAttribute('data-bs-dismiss', this.#id) : '';
+    }
+    get visible(){ //-> boolean
+        return (this.#wrapper.style.display != 'none');
+    }
+    get wrapper(){ //-> htmlElement
+        return this.#wrapper;
+    }
+    get dismisses(){ //-> array
+        return this.#dismisses;
+    }
+    get triggers(){ //-> array
+        return this.#triggers;
+    }
+    get body(){ //->htmlElement
+        return this.#body;
+    }
+    set body(value /*htmlElement*/){ //-> void
+        this.#body = value;
+    }
+    addtrigger(trigger /*hmtlElement*/){ //-> void
+        trigger.setAttribute('data-bs-toggle', this.#id);
+        this.#triggers.push(trigger);
+    }
+    addDismiss(dismiss /*htmlElement*/){ //-> void
+        dismiss.setAttribute('data-bs-dismiss', this.#id);
+        this.#dismisses.push(dismiss);
+    }
 }
 
 class xEventListener extends xUILog{
