@@ -359,7 +359,7 @@ class xHTMLOffCanvas extends xUILog{
         (this.#dismiss.getAttribute('data-bs-dismiss') == null) ? this.#dismiss.setAttribute('data-bs-dismiss', this.#id) : '';
     }
     get visible(){ //-> boolean
-        return (this.#wrapper.style.display != 'none');
+        return (this.#wrapper.style.display != 'none' && this.#wrapper.style.display != 'hidden');
     }
     get wrapper(){ //-> htmlElement
         return this.#wrapper;
