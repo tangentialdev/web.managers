@@ -1,4 +1,4 @@
-//Elements Missing -- Modals, queue error log
+//Elements Missing -- Modals, queue error log, carousel, text scroll
 class xUITools{
     constructor(){
     }
