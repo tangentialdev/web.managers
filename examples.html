@@ -9,6 +9,9 @@
     </head>
     <body>  
         <div class="container">
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-md btn-outline-warning" id="offcanvas-example-trigger" data-bs-toggle='offcanvas' data-bs-target="#offcanvas-error-wrapper" type="button">Off Canvas Log Example</button>
+            </div>
             <div class="row">
                 <div class="col-sm-12 col-md-8 col-lg-6">
                     <!-- START Pane Manager Example -->
@@ -36,13 +39,13 @@
                 
         </div>
         <!-- START: Error Log ------------------------------>
-        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvas-error-wrapper" aria-labelledby="offcanvasExampleLabel">
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-error-wrapper" aria-labelledby="offcanvasExampleLabel">
             <div class="offcanvas-header">
               <h5 class="offcanvas-title" id="offcanvas-error-label">Error Log</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="offcanvas-error-wrapper" aria-label="Close"></button>
+              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" id="offcanvas-example-close"></button>
             </div>
             <div class="offcanvas-body">
-                <div id="offcanvas-error-log">
+                <div class="accordion" id="offcanvas-error-log">
 
                 </div>
             </div>
@@ -50,9 +53,15 @@
         <!-- END: Error Log --------------------------->
            
         
+        <script id="example-Off-Canvas">
+            let wrapper = document.getElementById('offcanvas-error-wrapper');
+            let dismiss = document.getElementById('offcanvas-example-close');
+            let trigger = document.getElementById('offcanvas-example-trigger');
+            let offCanvas = new xHTMLOffCanvas(wrapper, dismiss, trigger);
+
+        </script>
         
-        
-        <script id="pane-example">
+        <script id="example-Pane-Manager">
             let paneManager = new xHTMLPane_Manager();
             let pane1 = {
                 'Trigger': new xHTMLPane_Trigger(document.getElementById('show-pane-1')),
@@ -71,6 +80,6 @@
             paneManager.setItem('pane-3', pane3);
             paneManager.activate('pane-1');
         </script>
-
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     </body>
 </html>

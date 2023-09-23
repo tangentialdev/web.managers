@@ -2,7 +2,7 @@ class xUITools{
     constructor(){
     }
     get id(){ //string
-        return (new Date().getTime() + Math.random()*10000).toString(16);
+        return 'x_' + (new Date().getTime() + parseInt(Math.random()*10000)).toString(16);
     }
 }
 
@@ -14,29 +14,31 @@ class xUILog {
         this.#loggingEnabled = configuration.UI_LOGGING_ENABLED; 
         this.#id = new xUITools().id;
         this.#frame = document.createElement('div');
-        this.#frame.innerHTML = '<div class=\"card\">' + //Need to add Bootstrap classes to this
-                                    '<div class=\"card-header\">' + 
-                                        '<div class=\"log-length\">'+ this.#log.length + 
-                                        '</div>' +
-                                        '<div class=\"source\">' + this.#source + 
-                                        '</div>' +
-                                        '<div class=\"id\">' + this.#id + 
+        this.#frame.innerHTML = '<div class=\"accordion-item\">' +
+                                    '<div class=\"accordion-header\">' +
+                                        '<button class=\"accordion-button\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#'+ this.#id + '\">' +
+                                            '<div class=\"row\"  style=\"font-size:12px\">' +
+                                                '<div class=\"col log-length\">'+ this.#log.length + '</div>' +
+                                                '<div class=\"col source\">' + this.#source + '</div>' +
+                                                '<div class=\"col id\">' + this.#id + '</div>' +
+                                            '</div>' +
+                                        '</button>' +
+                                    '</div>' +
+                                    '<div id=\"'+ this.#id+ '\" class=\"accordion-collapse collapse\" data-bs-parent=\"#'+ configuration.ERROR_LOG_DOCUMENT_ID + '\">' +
+                                        '<div class=\"accordion-body\">' +
+                                            '<table class=\"table table-striped\">' +
+                                                '<thead>' +
+                                                    '<tr>' +
+                                                        '<th> Trace </th>' +
+                                                        '<th> mMssage </th>' +
+                                                    '</tr>' +
+                                                '</thead>'+
+                                                '<tbody class=\"error-table-body\">' +
+                                                '</tbody>' +
+                                            '</table>' +
                                         '</div>' +
                                     '</div>' +
-                                    '<div class=\"card-body\">'+
-                                        '<table class=\"table table-striped\">' +
-                                            '<thead>' +
-                                                '<tr>' +
-                                                    '<th> L_Num </th>' +
-                                                    '<th> message </th>' +
-                                                    '<th> Raw Error </th>'+
-                                                '</tr>' +
-                                            '</thead>'+
-                                            '<tbody class=\"error-table-body\">' +
-                                            '</tbody>' +
-                                        '</table>' +
-                                    '</div>' +
-                                '</div>';
+                              '</div>';
         document.getElementById(configuration.ERROR_LOG_DOCUMENT_ID).appendChild(this.#frame);
     }
     get source(){ //-> htmlElement
@@ -54,8 +56,13 @@ class xUILog {
     log(msg /*string || JSON*/){ //-> void
         this.#log.push(msg);
         let entry = document.createElement('tr');
-        entry.innerHTML = '<td>' + msg.lNum + '</td>' +
-                        '<td>' + msg.msg + '</div>';
+        if (msg instanceof Error){
+            entry.innerHTML = '<td>' + msg.stack.slice(msg.stack.lastIndexOf("/")+ 1, msg.stack.length) + '</td>' +
+                            '<td style=\"overflow-y:scroll\">' + msg.message + '</div>' ;
+        }else{
+            entry.setAttribute('colspan', 3);
+            entry.innerHTML = msg;    
+        }
         this.#frame.getElementsByClassName("error-table-body")[0].appendChild(entry);
     }
 }
@@ -339,7 +346,7 @@ class xHTMLPane_Manager extends xUILog{
         });
     }
     activate(key /*string*/){ //-> void
-        (this.#activePane != null) ? this.#activePane['Pane'].hide(): super.log('No Active Pane Set');
+        (this.#activePane != null) ? this.#activePane['Pane'].hide(): super.log(new Error('Activating Pane: ' + key));
         this.#catalog[key]['Pane'].activate();
         this.#activePane = this.#catalog[key];
     }
@@ -355,8 +362,9 @@ class xHTMLOffCanvas extends xUILog{
         this.#triggers = [trigger];
         this.#body = this.#wrapper;
         (this.#wrapper.id.length > 0) ? this.#id = this.#wrapper.id: this.#id = new xUITools().id;
-        this.#trigger.setAttribute('data-bs-toggle', this.#id);
-        (this.#dismiss.getAttribute('data-bs-dismiss') == null) ? this.#dismiss.setAttribute('data-bs-dismiss', this.#id) : '';
+        this.#triggers[0].setAttribute('data-bs-toggle', 'offcanvas');
+        this.#triggers[0].setAttribute('data-bs-target', '#' + this.#id);
+        (this.#dismisses[0].getAttribute('data-bs-dismiss') == null) ? this.#dismisses[0].setAttribute('data-bs-dismiss', 'offcanvas') : '';
     }
     get visible(){ //-> boolean
         return (this.#wrapper.style.display != 'none' && this.#wrapper.style.display != 'hidden');
