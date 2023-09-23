@@ -6,15 +6,28 @@
         <script src="UI.js"></script>
         <script src="queue.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+        <style>
+            .off-canvas-resize{
+                height:100%;
+                width:1%; 
+                display:inline-block;
+                float:left;
+                background-color: black;
+                cursor:col-resize;
+            }
+            #offcanvas-error-log{
+                width:98%;
+                display: inline-block;
+                float:right;
+            }
+        </style>
     </head>
     <body>  
         <div class="container">
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-md btn-outline-warning" id="offcanvas-example-trigger" data-bs-toggle='offcanvas' data-bs-target="#offcanvas-error-wrapper" type="button">Off Canvas Log Example</button>
-            </div>
-            <div class="row">
+            <div class="row mt-4">
                 <div class="col-sm-12 col-md-8 col-lg-6">
                     <!-- START Pane Manager Example -->
+                    <h5 class="text-primary">Pane Manager Example</h5>
                     <div class="card">
                         <div class="card-header">
                             <div class="d-flex justify-content-between"> <!--Pane Triggers-->
@@ -24,42 +37,100 @@
                             </div>
                         </div>
                         <div class="card-body" id="pane-1"> <!--Pane 1 Body-->
-                            <h3>Hello World: Pane 1</h3>
+                            <h3>Pane 1 here </h3>
+                            <p>no managing of the visible panes needed here, once initialized this library handles visibility of the content in the panes you can have multiple triggers for 1 pane if you need as well</p>
                         </div>
                         <div class="card-body" id="pane-2"> <!--Pane 1 Body-->
-                            <h3>Hello World: Pane 2</h3>
+                            <h3>Pane 2 here </h3>
+                            <p>if you need to know which is visible its easy using this library. just check the paneManager.activePane property to get the active trigger and pane at that time on the page</p>
                         </div>
                         <div class="card-body" id="pane-3"> <!--Pane 1 Body-->
-                            <h3>Hello World: Pane 3</h3>
+                            <h3>Pane 3 here</h3>
+                            <p>You can put whatever you would like in these panes -- including another pane manager. Styling can be anything, for this example I'm using the card subset from bootstrap</p>
                         </div>
                     </div>
-                    <!--END Pane Manager Example--------------------------------------->
-
                 </div>
+                <!--END Pane Manager Example--------------------------------------->
+                <!-- START Off Canvas and Error Log Example ----------------------->
+                <div class="col-sm-12 col-md-3 col-lg-6">
+                        <h5 class="text-primary">Off Canvas, Modal, & Error Logs Examples</h5>
+                        <div class="card card-body">
+                            <div class="d-flex justify-content-between">
+                                <label for="offcanvas-example-trigger">Off Canvas and UI Error Log Visiblity</label>
+                                <button class="btn btn-md btn-outline-secondary" id="offcanvas-example-trigger" data-bs-toggle='offcanvas' data-bs-target="#offcanvas-error-wrapper" type="button">CLICK ME!</button>
+                            </div>
+                        </div>
+                        
+                </div>
+                <!--END Off Canvas and Error Log Example--------------------------------------->
+            </div>
+            <div class="row mt-4">
+                <!-- START Form Manager Example ----------------------->
+                <h5 class="text-primary">Form Handler Example</h5>
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <div class="card card-body">
+                        <form class="form" id="example-form">
+                            <div class="mb-3">
+                                <label for="example-input-1" class="form-label">Email address</label>
+                                <input type="email" class="form-control" id="example-input-1" aria-describedby="emailHelp">
+                                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="example-input-2" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="example-input-2">
+                            </div>
+                            <div class="mb-3">
+                                <label for="example-input-3" class="form-label">Hidden Input</label>
+                                <input type="text" class="form-control" value="I'm hidden in by the manager" id="example-input-3">
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="example-checkbox-1">
+                                <label class="form-check-label" for="example-checkbox-1">Check me out</label>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="example-checkbox-2">
+                                <label class="form-check-label" for="example-checkbox-2">Check me out, I'm disabled using the manager</label>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <button type="button" class="btn btn-primary" id="example-submit">Submit</button>
+                                <button type="button" class="btn btn-warning" id="example-enable-disable">Enable/Disable additional Fields</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-5 col-lg-5">
+                    <div class="card card-body">
+                        <h6>Form Output</h6>
+                        <pre id="example-form-output"></pre>
+                    </div>
+                </div>
+                <!--END Form Manager Example--------------------------------------->
             </div>
         </div>
-        
         <!-- START: Error Log ------------------------------>
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-error-wrapper" aria-labelledby="offcanvasExampleLabel">
-            <div class="offcanvas-header">
-              <h5 class="offcanvas-title" id="offcanvas-error-label">Error Log</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" id="offcanvas-example-close"></button>
-            </div>
-            <div class="offcanvas-body">
-                <div class="accordion" id="offcanvas-error-log">
 
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-error-wrapper" aria-labelledby="offcanvasExampleLabel">
+                <div class="offcanvas-header">
+                  <h5 class="offcanvas-title" id="offcanvas-error-label">Error Log</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" id="offcanvas-example-close"></button>
+                </div>
+                <div class="offcanvas-body" style="overflow-y:scroll;">
+                    <div class="off-canvas-resize" ></div>
+                    <div class="accordion" id="offcanvas-error-log" >
+    
+                    </div>
                 </div>
             </div>
-        </div>
+       
         <!-- END: Error Log --------------------------->
            
         
         <script id="example-Off-Canvas">
-            let wrapper = document.getElementById('offcanvas-error-wrapper');
+            let cWrapper = document.getElementById('offcanvas-error-wrapper');
             let dismiss = document.getElementById('offcanvas-example-close');
             let trigger = document.getElementById('offcanvas-example-trigger');
-            let offCanvas = new xHTMLOffCanvas(wrapper, dismiss, trigger);
-
+            let offCanvas = new xOffCanvas(cWrapper, dismiss, trigger);
         </script>
         
         <script id="example-Pane-Manager">
@@ -80,6 +151,36 @@
             paneManager.setItem('pane-2', pane2);
             paneManager.setItem('pane-3', pane3);
             paneManager.activate('pane-1');
+        </script>
+
+        <script id="example-form-manager">
+            let fWrapper = document.getElementById('example-form');
+            let output = document.getElementById('example-form-output');
+            let formManager = new xForm_Manager(fWrapper);
+            let input1 = new xForm_Element(document.getElementById('example-input-1'));
+            let input2 = new xForm_Element(document.getElementById('example-input-2'));
+            let input3 = new xForm_Element(document.getElementById('example-input-3'));
+            let checkbox1 = new xForm_Element(document.getElementById('example-checkbox-1'));
+            let checkbox2 = new xForm_Element(document.getElementById('example-checkbox-2'));
+            formManager.addElement('input-1', input1);
+            formManager.addElement('input-2', input2);
+            formManager.addElement('input-3', input3);
+            formManager.addElement('checkbox-1', checkbox1);
+            formManager.addElement('checkbox-2', checkbox2);
+            formManager.getElement('checkbox-2').disabled = true;
+            formManager.getElement('input-3').toggle(); //Hide Input
+            formManager.getElement('input-3').element.parentNode.style.display = 'none'; //Hide Labels
+            let submitEvent = new xEventListener(document.getElementById('example-submit'), 'click');
+            submitEvent.eventAction = () =>{
+                output.innerText = formManager.data;
+            }
+            submitEvent.setEvent();
+            let toggleEvent = new xEventListener(document.getElementById('example-enable-disable'), 'click');
+            toggleEvent.eventAction = ()=> {
+                formManager.getElement('input-3').toggle();
+                formManager.getElement('checkbox-2').disabled = (formManager.getElement('checkbox-2').disabled) ? false: true;
+            }
+            toggleEvent.setEvent();
         </script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     </body>

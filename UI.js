@@ -17,7 +17,7 @@ class xUILog {
         this.#frame = document.createElement('div');
         this.#frame.innerHTML = '<div class=\"accordion-item\">' +
                                     '<div class=\"accordion-header\">' +
-                                        '<button class=\"accordion-button\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#'+ this.#id + '\">' +
+                                        '<button class=\"accordion-button collapsed\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#'+ this.#id + '\">' +
                                             '<div class=\"row\"  style=\"font-size:12px\">' +
                                                 '<div class=\"col log-length\">'+ this.#log.length + '</div>' +
                                                 '<div class=\"col source\">' + this.#source + '</div>' +
@@ -27,9 +27,10 @@ class xUILog {
                                     '</div>' +
                                     '<div id=\"'+ this.#id+ '\" class=\"accordion-collapse collapse\" data-bs-parent=\"#'+ configuration.ERROR_LOG_DOCUMENT_ID + '\">' +
                                         '<div class=\"accordion-body\">' +
-                                            '<table class=\"table table-striped\">' +
+                                            '<table class=\"table table-striped\" style=\"font-size:10px\">' +
                                                 '<thead>' +
                                                     '<tr>' +
+                                                        '<th style=\"display:none;\"> Time</th>' +
                                                         '<th> Trace </th>' +
                                                         '<th> Message </th>' +
                                                     '</tr>' +
@@ -40,7 +41,7 @@ class xUILog {
                                         '</div>' +
                                     '</div>' +
                               '</div>';
-        document.getElementById(configuration.ERROR_LOG_DOCUMENT_ID).appendChild(this.#frame);
+        (this.#loggingEnabled)? document.getElementById(configuration.ERROR_LOG_DOCUMENT_ID).appendChild(this.#frame): '';
     }
     get source(){ //-> htmlElement
         return this.#source;
@@ -55,16 +56,20 @@ class xUILog {
         this.#loggingEnabled = value;
     }
     log(msg /*string || JSON*/){ //-> void
-        this.#log.push(msg);
-        let entry = document.createElement('tr');
-        if (msg instanceof Error){
-            entry.innerHTML = '<td>' + msg.stack.slice(msg.stack.lastIndexOf("/")+ 1, msg.stack.length) + '</td>' +
-                            '<td style=\"overflow-y:scroll\">' + msg.message + '</div>' ;
-        }else{
-            entry.setAttribute('colspan', 3);
-            entry.innerHTML = msg;    
+        if (this.#loggingEnabled){
+            this.#log.push(msg);
+            let entry = document.createElement('tr');
+            if (msg instanceof Error){
+                entry.innerHTML = '<td style=\"display:none\">' + new Date().getTime() + '</td>' +
+                                '<td>' + msg.stack.slice(msg.stack.lastIndexOf("/")+ 1, msg.stack.length).replace(')', '') + '</td>' +
+                                '<td style=\"overflow-y:scroll;display:block;\">' + msg.message + '</div>' ;
+            }else{
+                entry.setAttribute('colspan', 3);
+                entry.innerHTML = msg;    
+            }
+            this.#frame.getElementsByClassName("log-length")[0].innerText = this.#log.length;
+            this.#frame.getElementsByClassName("error-table-body")[0].appendChild(entry);
         }
-        this.#frame.getElementsByClassName("error-table-body")[0].appendChild(entry);
     }
 }
 
@@ -192,16 +197,20 @@ class xExRef extends xUILog{
     
 }
 
-class xFormElement extends xUILog{
-    #element; #tagName; #visible;
+class xForm_Element extends xUILog{
+    #element; #tagName; #visible; #display; 
     constructor(element /*htmlElement*/, override='' /*string*/){ //-> void
         super('xFormElement');
         this.#element = element;
         this.#tagName = (override != '') ? override : this.#element.tagName;
-        this.#visible = !(this.#element.style.display == 'none');
+        this.#visible = !(this.#element.parentNode.style.display == 'none');
+        this.#display = this.#element.parentNode.style.display;
+    }
+    get visible(){
+        return this.#visible;
     }
     get element(){ //-> htmlElement
-        return this.element;
+        return this.#element;
     }
     get tagName(){ //-> string
         return this.#tagName;
@@ -209,21 +218,33 @@ class xFormElement extends xUILog{
     get value(){ //-> string
         return this.#getValue();
     }
+    get disabled(){ //-> boolean
+        return this.#element.disabled;
+    }
+    set disabled(value /*boolean*/){ //-> void
+        this.#element.disabled = value;
+    }
     set value (value /*string*/){ //-> void
         this.#setValue(value);
     }
     toggle(){
-        (this.#visible) ? this.#element.style.display = 'none': this.#element.style.display = '';
+        (this.#visible) ? this.#element.parentNode.style.display = 'none': this.#element.parentNode.style.display = this.#display;
+        this.#visible = !(this.#element.parentNode.style.display == 'none');
     }
     #getValue(){ //Need to Finish
+        console.log(this.#element);
         switch(this.#tagName){
             case 'SELECT':
                 return this.#element.value;
                 break;
-            case 'input':
-                return this.#element.value;
+            case 'INPUT':
+                if (this.#element.type == 'checkbox'){
+                    return this.#element.checked;
+                }else{
+                    return this.#element.value;
+                }
                 break;
-            case 'button':
+            case 'BUTTON':
                 return this.#element.innerText;
                 break;
             default:
@@ -249,13 +270,24 @@ class xFormElement extends xUILog{
     }
 }
 
-class xForm extends xUILog{
+class xForm_Manager extends xUILog{
     #wrapper; #visible; #catalog;
     constructor(wrapper /*htmlElement*/){ //-> void
         super('xForm');
         this.#wrapper = wrapper;
-        this.#visible = !(this.wrapper.style.display == 'None');
+        this.#visible = !(this.wrapper.style.display == 'none');
         this.#catalog = {};
+    }
+    get data(){ //->String
+        let lData = {};
+        for (var key in this.#catalog){
+            let obj = this.#catalog[key];
+            if (obj.visible && !obj.disabled){
+                console.log(obj);
+                lData[key] = obj.value;
+            }
+        }
+        return JSON.stringify(lData, undefined, 2);
     }
     get wrapper(){ //-> htmlElement
         return this.#wrapper;
@@ -271,13 +303,14 @@ class xForm extends xUILog{
         (this.#visible) ? this.#wrapper.style.display = 'none': this.#wrapper.style.display ='';
         this.#visible = (this.#visible) ? false: true; 
     }
-    addElement(id /*string*/, formElement /*xFormElement*/){ //-> void DO I WANT THIS TO BE HTML ELEMENT OR FOR ELEMENT
+    addElement(id /*string*/, formElement /*xForm_Element*/){ //-> void 
         this.#catalog[id] = formElement;
+        console.log(this.#catalog);
     }
-    getElement(id /*string*/) { //-> xFormElement
+    getElement(id /*string*/) { //-> xForm_Element
         let nullElement = document.createElement('div');
         nullElement.innerText = 'ID Not Found, blank Form Element Generated';
-        return (id in this.#catalog) ? this.#catalog[id] : new xFormElement(nullElement);
+        return (id in this.#catalog) ? this.#catalog[id] : new xForm_Element(nullElement);
     }
 }
 
@@ -334,6 +367,9 @@ class xHTMLPane_Manager extends xUILog{
         this.#catalog = {};
         this.#activePane;
     }
+    get activePane(){
+        return this.#activePane;
+    }
     get catalog(){ //-> JSON
         return this.#catalog;
     }
@@ -347,14 +383,15 @@ class xHTMLPane_Manager extends xUILog{
         });
     }
     activate(key /*string*/){ //-> void
-        (this.#activePane != null) ? this.#activePane['Pane'].hide(): super.log(new Error('Activating Pane: ' + key));
+        (this.#activePane != null) ? this.#activePane['Pane'].hide(): '';
         this.#catalog[key]['Pane'].activate();
         this.#activePane = this.#catalog[key];
+        super.log(new Error('Active Pane: ' + key))
     }
     
 }
 
-class xHTMLOffCanvas extends xUILog{
+class xOffCanvas extends xUILog{
     #wrapper; #triggers; #body; #id; #dismisses;
     constructor(wrapper /*htmlElement*/, dismiss /*htmlElement*/, trigger/*htmlElement*/){ //->xHTMLOffCanvas;
         super('xHTMLOffCanvas');
@@ -421,5 +458,46 @@ class xEventListener extends xUILog{
     }
     removeEvent(){ //-> void
         this.#element.removeEventListener(this.#type, this.#event);
+    }
+}
+
+class xModal extends xUILog{
+    #wrapper; #triggers; #body; #id; #dismisses;
+    constructor(wrapper /*htmlElement*/, dismiss /*htmlElement*/, trigger/*htmlElement*/){ //->xModalCanvas;
+        super('xModal');
+        this.#wrapper = wrapper;
+        this.#dismisses = [dismiss];
+        this.#triggers = [trigger];
+        this.#body = this.#wrapper;
+        (this.#wrapper.id.length > 0) ? this.#id = this.#wrapper.id: this.#id = new xUITools().id;
+        this.#triggers[0].setAttribute('data-bs-toggle', 'modal');
+        this.#triggers[0].setAttribute('data-bs-target', '#' + this.#id);
+        (this.#dismisses[0].getAttribute('data-bs-dismiss') == null) ? this.#dismisses[0].setAttribute('data-bs-dismiss', 'modal') : '';
+    }
+    get visible(){ //-> boolean
+        return (this.#wrapper.style.display != 'none' && this.#wrapper.style.display != 'hidden');
+    }
+    get wrapper(){ //-> htmlElement
+        return this.#wrapper;
+    }
+    get dismisses(){ //-> array
+        return this.#dismisses;
+    }
+    get triggers(){ //-> array
+        return this.#triggers;
+    }
+    get body(){ //->htmlElement
+        return this.#body;
+    }
+    set body(value /*htmlElement*/){ //-> void
+        this.#body = value;
+    }
+    addtrigger(trigger /*hmtlElement*/){ //-> void
+        trigger.setAttribute('data-bs-toggle', this.#id);
+        this.#triggers.push(trigger);
+    }
+    addDismiss(dismiss /*htmlElement*/){ //-> void
+        dismiss.setAttribute('data-bs-dismiss', this.#id);
+        this.#dismisses.push(dismiss);
     }
 }
