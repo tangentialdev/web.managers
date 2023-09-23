@@ -30,7 +30,7 @@ class xUILog {
                                                 '<thead>' +
                                                     '<tr>' +
                                                         '<th> Trace </th>' +
-                                                        '<th> mMssage </th>' +
+                                                        '<th> Message </th>' +
                                                     '</tr>' +
                                                 '</thead>'+
                                                 '<tbody class=\"error-table-body\">' +
