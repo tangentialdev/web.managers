@@ -392,17 +392,19 @@ class xHTMLPane_Manager extends xUILog{
 }
 
 class xOffCanvas extends xUILog{
-    #wrapper; #triggers; #body; #id; #dismisses;
+    #wrapper; #triggers; #body; #id; #dismisses; #drag
     constructor(wrapper /*htmlElement*/, dismiss /*htmlElement*/, trigger/*htmlElement*/){ //->xHTMLOffCanvas;
         super('xHTMLOffCanvas');
         this.#wrapper = wrapper;
         this.#dismisses = [dismiss];
         this.#triggers = [trigger];
         this.#body = this.#wrapper;
+        this.#drag = (this.#wrapper.getElementsByClassName("off-canvas-resize").length > 0) ? this.#wrapper.getElementsByClassName("off-canvas-resize")[0]: null;
         (this.#wrapper.id.length > 0) ? this.#id = this.#wrapper.id: this.#id = new xUITools().id;
         this.#triggers[0].setAttribute('data-bs-toggle', 'offcanvas');
         this.#triggers[0].setAttribute('data-bs-target', '#' + this.#id);
         (this.#dismisses[0].getAttribute('data-bs-dismiss') == null) ? this.#dismisses[0].setAttribute('data-bs-dismiss', 'offcanvas') : '';
+        this.#drag != null ? this.#allowResizing(): super.log(new Error('Resizing not possible, resize bar not found'));
     }
     get visible(){ //-> boolean
         return (this.#wrapper.style.display != 'none' && this.#wrapper.style.display != 'hidden');
@@ -429,6 +431,30 @@ class xOffCanvas extends xUILog{
     addDismiss(dismiss /*htmlElement*/){ //-> void
         dismiss.setAttribute('data-bs-dismiss', this.#id);
         this.#dismisses.push(dismiss);
+    }
+    #allowResizing(){
+        let startX; let endX; 
+        let dragging = false;
+        this.#wrapper.style.width = this.#wrapper.offsetWidth;
+        this.#drag.addEventListener('mousedown', (e)=>{
+            e.preventDefault();
+            dragging = true;
+            startX = e.clientX;
+            console.log(this.#wrapper.style.width);
+        });
+        window.addEventListener('mousemove', (e)=>{
+            if (dragging) {
+                e.preventDefault();
+                endX = e.clientX;
+                this.#wrapper.setAttribute('width', parseInt(this.#wrapper.getAttribute('width')) +  (startX - endX) + 'px');
+
+            }
+        })
+        window.addEventListener('mouseup', ()=>{
+            dragging = false;
+            
+        });
+           
     }
 }
 
