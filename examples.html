@@ -7,18 +7,12 @@
         <script src="queue.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
         <style>
-            .off-canvas-resize{
-                height:100%;
-                width:1%; 
-                display:inline-block;
-                float:left;
-                background-color: black;
+            .offcanvas-resize{
                 cursor:col-resize;
-            }
-            #offcanvas-error-log{
-                width:98%;
-                display: inline-block;
-                float:right;
+                border:2px solid black;
+                padding:4px;
+                height:100%;
+                width:100%;
             }
         </style>
     </head>
@@ -110,17 +104,19 @@
         </div>
         <!-- START: Error Log ------------------------------>
 
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-error-wrapper" aria-labelledby="offcanvasExampleLabel">
-                <div class="offcanvas-header">
-                  <h5 class="offcanvas-title" id="offcanvas-error-label">Error Log</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" id="offcanvas-example-close"></button>
+            <div class="offcanvas offcanvas-end bg-light" tabindex="-1" id="offcanvas-error-wrapper" aria-labelledby="offcanvasExampleLabel">
+                <div class="offcanvas-resize">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvas-error-label">Error Log</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" id="offcanvas-example-close"></button>
+                      </div>
+                      <div class="offcanvas-body" style="overflow-y:auto;height:90vh">
+                            <div class="accordion" id="offcanvas-error-log"  >
+        
+                            </div>
+                      </div>
                 </div>
-                <div class="offcanvas-body" style="overflow-y:scroll;">
-                    <div class="off-canvas-resize" ></div>
-                    <div class="accordion" id="offcanvas-error-log" >
-    
-                    </div>
-                </div>
+               
             </div>
        
         <!-- END: Error Log --------------------------->

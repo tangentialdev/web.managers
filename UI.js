@@ -392,23 +392,23 @@ class xHTMLPane_Manager extends xUILog{
 }
 
 class xOffCanvas extends xUILog{
-    #wrapper; #triggers; #body; #id; #dismisses; #drag; #startX; #endX; #dragging;
+    #wrapper; #triggers; #body; #id; #dismisses; #drag; #startX; #endX; #dragging; #resizeLimit;
     constructor(wrapper /*htmlElement*/, dismiss /*htmlElement*/, trigger/*htmlElement*/){ //->xHTMLOffCanvas;
         super('xHTMLOffCanvas');
         this.#wrapper = wrapper;
         this.#dismisses = [dismiss];
         this.#triggers = [trigger];
         this.#body = this.#wrapper;
-        this.#drag = (this.#wrapper.getElementsByClassName("off-canvas-resize").length > 0) ? this.#wrapper.getElementsByClassName("off-canvas-resize")[0]: null;
+        this.#drag = (this.#wrapper.getElementsByClassName("offcanvas-resize").length > 0) ? this.#wrapper.getElementsByClassName("offcanvas-resize")[0]: null;
         (this.#wrapper.id.length > 0) ? this.#id = this.#wrapper.id: this.#id = new xUITools().id;
         this.#triggers[0].setAttribute('data-bs-toggle', 'offcanvas');
         this.#triggers[0].setAttribute('data-bs-target', '#' + this.#id);
         (this.#dismisses[0].getAttribute('data-bs-dismiss') == null) ? this.#dismisses[0].setAttribute('data-bs-dismiss', 'offcanvas') : '';
         this.#drag != null ? this.#allowResizing(): super.log(new Error('Resizing not possible, resize bar not found'));
         this.#dragging = false;
+        this.#resizeLimit = 250;
         this.#startX;
         this.#endX;
-        console.log(this.#dragging);
     }
     get visible(){ //-> boolean
         return (this.#wrapper.style.display != 'none' && this.#wrapper.style.display != 'hidden');
@@ -446,21 +446,35 @@ class xOffCanvas extends xUILog{
         e.preventDefault();
         this.#dragging = true;
         this.#startX = e.screenX;
-        console.log(this.#wrapper.style.width);
+        console.log(parseInt(this.#wrapper.style.width));
     }
     #move(e){
         if (this.#dragging) {
             console.log('dragging');
             e.preventDefault();
             this.#endX = e.screenX;
-            this.#wrapper.style.width =  parseInt(this.#wrapper.style.width) +  (this.#startX - this.#endX)/screen.width + 'px';
+            console.log(parseInt(screen.width)-this.#resizeLimit, this.#wrapper.style.width);
+            switch(true){
+                case (parseInt(this.#wrapper.style.width)> parseInt(screen.width)-this.#resizeLimit) && ((this.#endX - this.#startX) < 0):
+                    this.#wrapper.style.width = parseInt(screen.width) - this.#resizeLimit + 'px';
+                    break;
+                case parseInt(this.#wrapper.style.height)> parseInt(screen.height)- this.#resizeLimit:
+                    this.#wrapper.style.height = parseInt(screen.height) - this.#resizeLimit + 'px';
+                    break;
+                case parseInt(this.#wrapper.style.width)< this.#resizeLimit && ((this.#endX - this.#startX) > 0):
+                    this.#wrapper.style.width = this.#resizeLimit + 'px';
+                    break;
+                case parseInt(this.#wrapper.style.height) < this.#resizeLimit :
+                    this.#wrapper.style.height = this.#resizeLimit + 'px';
+                    break;
+                default:
+                    this.#wrapper.style.width =  parseInt(this.#wrapper.style.width) -  (this.#endX - this.#startX) + 'px';
+            } 
         }
     }
     #up(e){
         if (this.#dragging){
             this.#dragging = false;
-            console.log(this.#startX, this.#endX , parseInt(this.#wrapper.style.width));
-            this.#wrapper.setAttribute('width', parseInt(this.#wrapper.getAttribute('width')) +  (this.#startX - this.#endX) + 'px');
         }
     }
 }
