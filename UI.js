@@ -392,7 +392,7 @@ class xHTMLPane_Manager extends xUILog{
 }
 
 class xOffCanvas extends xUILog{
-    #wrapper; #triggers; #body; #id; #dismisses; #drag
+    #wrapper; #triggers; #body; #id; #dismisses; #drag; #startX; #endX; #dragging;
     constructor(wrapper /*htmlElement*/, dismiss /*htmlElement*/, trigger/*htmlElement*/){ //->xHTMLOffCanvas;
         super('xHTMLOffCanvas');
         this.#wrapper = wrapper;
@@ -405,6 +405,10 @@ class xOffCanvas extends xUILog{
         this.#triggers[0].setAttribute('data-bs-target', '#' + this.#id);
         (this.#dismisses[0].getAttribute('data-bs-dismiss') == null) ? this.#dismisses[0].setAttribute('data-bs-dismiss', 'offcanvas') : '';
         this.#drag != null ? this.#allowResizing(): super.log(new Error('Resizing not possible, resize bar not found'));
+        this.#dragging = false;
+        this.#startX;
+        this.#endX;
+        console.log(this.#dragging);
     }
     get visible(){ //-> boolean
         return (this.#wrapper.style.display != 'none' && this.#wrapper.style.display != 'hidden');
@@ -433,28 +437,31 @@ class xOffCanvas extends xUILog{
         this.#dismisses.push(dismiss);
     }
     #allowResizing(){
-        let startX; let endX; 
-        let dragging = false;
         this.#wrapper.style.width = this.#wrapper.offsetWidth;
-        this.#drag.addEventListener('mousedown', (e)=>{
+        this.#drag.addEventListener('mousedown', (e) => this.#down(e));
+        window.addEventListener('mousemove', (e) => this.#move(e));
+        window.addEventListener('mouseup', (e) => this.#up(e));
+    }
+    #down(e){
+        e.preventDefault();
+        this.#dragging = true;
+        this.#startX = e.screenX;
+        console.log(this.#wrapper.style.width);
+    }
+    #move(e){
+        if (this.#dragging) {
+            console.log('dragging');
             e.preventDefault();
-            dragging = true;
-            startX = e.clientX;
-            console.log(this.#wrapper.style.width);
-        });
-        window.addEventListener('mousemove', (e)=>{
-            if (dragging) {
-                e.preventDefault();
-                endX = e.clientX;
-                this.#wrapper.setAttribute('width', parseInt(this.#wrapper.getAttribute('width')) +  (startX - endX) + 'px');
-
-            }
-        })
-        window.addEventListener('mouseup', ()=>{
-            dragging = false;
-            
-        });
-           
+            this.#endX = e.screenX;
+            this.#wrapper.style.width =  parseInt(this.#wrapper.style.width) +  (this.#startX - this.#endX)/screen.width + 'px';
+        }
+    }
+    #up(e){
+        if (this.#dragging){
+            this.#dragging = false;
+            console.log(this.#startX, this.#endX , parseInt(this.#wrapper.style.width));
+            this.#wrapper.setAttribute('width', parseInt(this.#wrapper.getAttribute('width')) +  (this.#startX - this.#endX) + 'px');
+        }
     }
 }
 
