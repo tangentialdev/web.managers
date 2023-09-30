@@ -409,6 +409,7 @@ class xOffCanvas extends xUILog{
         this.#resizeLimit = 250;
         this.#startX;
         this.#endX;
+        super.log(new Error('OffCanvas window initialized: ' + this.#id));
     }
     get visible(){ //-> boolean
         return (this.#wrapper.style.display != 'none' && this.#wrapper.style.display != 'hidden');
@@ -431,22 +432,27 @@ class xOffCanvas extends xUILog{
     addtrigger(trigger /*hmtlElement*/){ //-> void
         trigger.setAttribute('data-bs-toggle', this.#id);
         this.#triggers.push(trigger);
+        super.log(new Error('Trigger added to: ' + this.#id))
     }
     addDismiss(dismiss /*htmlElement*/){ //-> void
-        dismiss.setAttribute('data-bs-dismiss', this.#id);
+        dismiss.setAttribute('data-bs-dismiss', 'offcanvas');
         this.#dismisses.push(dismiss);
+        super.log(new Error('Dismiss added to: ' + this.#id));
     }
     #allowResizing(){
         this.#wrapper.style.width = this.#wrapper.offsetWidth;
         this.#drag.addEventListener('mousedown', (e) => this.#down(e));
         window.addEventListener('mousemove', (e) => this.#move(e));
         window.addEventListener('mouseup', (e) => this.#up(e));
+        super.log(new Error('Resizing Initialized to: ' + this.#id));
     }
     #down(e){
         e.preventDefault();
-        this.#dragging = true;
-        this.#startX = e.screenX;
-        console.log(parseInt(this.#wrapper.style.width));
+        if (e.target == this.#drag){
+            this.#dragging = true;
+            this.#startX = e.screenX;
+            console.log(parseInt(this.#wrapper.style.width));
+        }
     }
     #move(e){
         if (this.#dragging) {
@@ -475,6 +481,7 @@ class xOffCanvas extends xUILog{
     #up(e){
         if (this.#dragging){
             this.#dragging = false;
+            super.log(new Error("Pane Resize: " + -(this.#endX - this.#startX) + 'px'));
         }
     }
 }
@@ -544,7 +551,7 @@ class xModal extends xUILog{
         this.#triggers.push(trigger);
     }
     addDismiss(dismiss /*htmlElement*/){ //-> void
-        dismiss.setAttribute('data-bs-dismiss', this.#id);
+        dismiss.setAttribute('data-bs-dismiss', 'modal');
         this.#dismisses.push(dismiss);
     }
 }

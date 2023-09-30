@@ -9,7 +9,7 @@
         <style>
             .offcanvas-resize{
                 cursor:col-resize;
-                border:2px solid black;
+                border:2px solid lightgray;
                 padding:4px;
                 height:100%;
                 width:100%;
@@ -45,18 +45,29 @@
                     </div>
                 </div>
                 <!--END Pane Manager Example--------------------------------------->
-                <!-- START Off Canvas and Error Log Example ----------------------->
-                <div class="col-sm-12 col-md-3 col-lg-6">
-                        <h5 class="text-primary">Off Canvas, Modal, & Error Logs Examples</h5>
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <!-- START Off Canvas and Error Log Example ----------------------->
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <h5 class="text-primary">Off Canvas, Modal & Error Logs Example</h5>
                         <div class="card card-body">
                             <div class="d-flex justify-content-between">
                                 <label for="offcanvas-example-trigger">Off Canvas and UI Error Log Visiblity</label>
                                 <button class="btn btn-md btn-outline-secondary" id="offcanvas-example-trigger" data-bs-toggle='offcanvas' data-bs-target="#offcanvas-error-wrapper" type="button">CLICK ME!</button>
                             </div>
                         </div>
-                        
+                    </div>
+                    <!--END Off Canvas and Error Log Example--------------------------------------->
+                    <!-- START Modal Example ----------------------->
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <div class="card card-body">
+                            <div class="d-flex justify-content-between">
+                                <label for="modal-example-trigger">Modal Window trigger </label>
+                                <button class="btn btn-md btn-outline-secondary" id="example-modal-trigger" data-bs-toggle='modal' data-bs-target="#example-modal-wrapper" type="button">CLICK ME!</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!--END Modal Example--------------------------------------->
                 </div>
-                <!--END Off Canvas and Error Log Example--------------------------------------->
             </div>
             <div class="row mt-4">
                 <!-- START Form Manager Example ----------------------->
@@ -93,7 +104,7 @@
                         </form>
                     </div>
                 </div>
-                <div class="col-sm-12 col-md-5 col-lg-5">
+                <div class="col-sm-12 col-md-6 col-lg-6">
                     <div class="card card-body">
                         <h6>Form Output</h6>
                         <pre id="example-form-output"></pre>
@@ -110,7 +121,7 @@
                         <h5 class="offcanvas-title" id="offcanvas-error-label">Error Log</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" id="offcanvas-example-close"></button>
                       </div>
-                      <div class="offcanvas-body" style="overflow-y:auto;height:90vh">
+                      <div class="offcanvas-body" style="overflow-y:auto;height:90vh; cursor:default">
                             <div class="accordion" id="offcanvas-error-log"  >
         
                             </div>
@@ -120,13 +131,32 @@
             </div>
        
         <!-- END: Error Log --------------------------->
-           
-        
+        <!-- START: Modal Example---------------------------->
+        <div class="modal" tabindex="-1" id="example-modal-wrapper">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Modal title</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="example-modal-x"></button>
+                </div>
+                <div class="modal-body">
+                  <p>Modal body text goes here.</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="example-modal-dismiss">Close</button>
+                  <button type="button" class="btn btn-primary" id="example-modal-save">Save changes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        <!-- END: Modal Example ---------------------------------------->
+
+
         <script id="example-Off-Canvas">
             let cWrapper = document.getElementById('offcanvas-error-wrapper');
-            let dismiss = document.getElementById('offcanvas-example-close');
-            let trigger = document.getElementById('offcanvas-example-trigger');
-            let offCanvas = new xOffCanvas(cWrapper, dismiss, trigger);
+            let cDismiss = document.getElementById('offcanvas-example-close');
+            let cTrigger = document.getElementById('offcanvas-example-trigger');
+            let offCanvas = new xOffCanvas(cWrapper, cDismiss, cTrigger);
         </script>
         
         <script id="example-Pane-Manager">
@@ -178,6 +208,18 @@
             }
             toggleEvent.setEvent();
         </script>
+        <script id="example-modal">
+            let mWrapper = document.getElementById('example-modal-wrapper');
+            let mDismissX = document.getElementById('example-modal-x');
+            let mDismissP = document.getElementById('example-modal-dismiss');
+            let mSave = document.getElementById('example-modal-save');
+            let mTrigger = document.getElementById('example-modal-trigger');
+            let modal = new xModal(mWrapper, mDismissX, mTrigger);
+            modal.addDismiss(mDismissP);
+            modal.addDismiss(mSave);
+
+        </script>
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     </body>
 </html>
