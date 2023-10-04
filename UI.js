@@ -232,7 +232,6 @@ class xForm_Element extends xUILog{
         this.#visible = !(this.#element.parentNode.style.display == 'none');
     }
     #getValue(){ //Need to Finish
-        console.log(this.#element);
         switch(this.#tagName){
             case 'SELECT':
                 return this.#element.value;
@@ -283,7 +282,6 @@ class xForm_Manager extends xUILog{
         for (var key in this.#catalog){
             let obj = this.#catalog[key];
             if (obj.visible && !obj.disabled){
-                console.log(obj);
                 lData[key] = obj.value;
             }
         }
@@ -305,7 +303,6 @@ class xForm_Manager extends xUILog{
     }
     addElement(id /*string*/, formElement /*xForm_Element*/){ //-> void 
         this.#catalog[id] = formElement;
-        console.log(this.#catalog);
     }
     getElement(id /*string*/) { //-> xForm_Element
         let nullElement = document.createElement('div');
@@ -451,15 +448,12 @@ class xOffCanvas extends xUILog{
         if (e.target == this.#drag){
             this.#dragging = true;
             this.#startX = e.screenX;
-            console.log(parseInt(this.#wrapper.style.width));
         }
     }
     #move(e){
         if (this.#dragging) {
-            console.log('dragging');
             e.preventDefault();
             this.#endX = e.screenX;
-            console.log(parseInt(screen.width)-this.#resizeLimit, this.#wrapper.style.width);
             switch(true){
                 case (parseInt(this.#wrapper.style.width)> parseInt(screen.width)-this.#resizeLimit) && ((this.#endX - this.#startX) < 0):
                     this.#wrapper.style.width = parseInt(screen.width) - this.#resizeLimit + 'px';
@@ -554,4 +548,48 @@ class xModal extends xUILog{
         dismiss.setAttribute('data-bs-dismiss', 'modal');
         this.#dismisses.push(dismiss);
     }
+}
+
+class xCarousel extends xUILog {
+    #carousel; #carouselWrapper; #carouselNavigators; #carouselBody;
+    #id; #frameworkPresent; #slides; #indexForward; #indexBackward;
+    constructor(carouselWrapper /*htmlElement*/){ //-> xCarousel
+        super('xCarousel');
+        this.#carouselWrapper = carouselWrapper;
+        this.#carouselBody = this.#carouselWrapper.getElementsByClassName("carousel-inner")[0] || null;
+        this.#carouselNavigators = this.#carouselWrapper.getElementsByClassName("carousel-indicators")[0] || null;
+        this.#indexBackward = this.#carouselWrapper.getElementsByClassName("carousel-control-prev")[0];
+        this.#indexForward = this.#carouselWrapper.getElementsByClassName("carousel-control-next")[0];
+        this.#frameworkPresent = ((this.#carouselBody != null) && (this.#carouselNavigators != null));
+        if (this.#frameworkPresent){
+            this.#id = this.#carouselWrapper.id || new xUITools().id;
+            this.#carousel = bootstrap.Carousel.getOrCreateInstance(this.#carouselWrapper);
+            this.#slides = [...Array(document.getElementsByClassName("carousel-item").length).keys()];
+            this.#indexForward.setAttribute('data-bs-target', '#' + this.#id);
+            this.#indexBackward.setAttribute('data-bs-target', '#' + this.#id);
+        }else{
+            super.log(new Error('Carousel Framework Not found, carousel not initialized'));
+        }
+    }
+    get activeSlide(){
+        return this.#carouselBody.getElementsByClassName('active')[0] || null;
+    }
+    addSlide(slideInner /*htmlElment*/, label='' /*string*/){ //-> void
+        if (this.#frameworkPresent){
+            let slide = document.createElement('div');
+            slide.className = 'carousel-item';
+            slide.style.height = "500px";
+            slide.append(slideInner);
+            let navigator = '<button type=\"button\" data-bs-target=\"#' + this.#id + '\" data-bs-slide-to=\"'+ this.#slides.length + '\" aria-label=\"'+ label + '\"></button>';
+            this.#carouselBody.appendChild(slide);
+            this.#carouselNavigators.innerHTML += navigator;
+            this.#slides.push(this.#slides.length);
+            this.#carousel.dispose();
+            this.#carousel = new bootstrap.Carousel(this.#carouselWrapper);
+        }else{
+            super.log(new Error('Carousel Framework Not Present, slide not added'));
+        }
+        
+    }
+    
 }

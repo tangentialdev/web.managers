@@ -6,6 +6,7 @@
         <script src="UI.js"></script>
         <script src="queue.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
         <style>
             .offcanvas-resize{
                 cursor:col-resize;
@@ -112,6 +113,39 @@
                 </div>
                 <!--END Form Manager Example--------------------------------------->
             </div>
+            <div class="row mt-4">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <!-- START Carousel Example -->
+                    <div id="example-carousel" class="carousel slide bg-light" >
+                        <div class="carousel-indicators">
+                          <button type="button" data-bs-target="#example-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                          <button type="button" data-bs-target="#example-carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                          <button type="button" data-bs-target="#example-carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                        </div>
+                        <div class="carousel-inner">
+                          <div class="carousel-item active">
+                            <div class="d-block w-100 bg-dark" style="height:500px"></div>
+                          </div>
+                          <div class="carousel-item">
+                            <div class="d-block w-100 bg-info" style="height:500px"></div>
+                          </div>
+                          <div class="carousel-item">
+                            <div class="d-block w-100 bg-warning" style="height:500px"></div>
+                          </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#example-carousel" data-bs-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#example-carousel" data-bs-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                    <!-- END Carousel Example -->
+                </div>
+            </div>
+            
         </div>
         <!-- START: Error Log ------------------------------>
 
@@ -208,6 +242,7 @@
             }
             toggleEvent.setEvent();
         </script>
+        
         <script id="example-modal">
             let mWrapper = document.getElementById('example-modal-wrapper');
             let mDismissX = document.getElementById('example-modal-x');
@@ -217,9 +252,13 @@
             let modal = new xModal(mWrapper, mDismissX, mTrigger);
             modal.addDismiss(mDismissP);
             modal.addDismiss(mSave);
-
         </script>
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+        <script id="example-carousel">
+            let exWrapper = document.getElementById("example-carousel");
+            let exCarousel = new xCarousel(exWrapper);
+            let newSlide = document.createElement('h5');
+            newSlide.innerText = "Hello World. I'm a dynamically added Slide";
+            exCarousel.addSlide(newSlide, 'Dynamically Added');
+        </script>
     </body>
 </html>
