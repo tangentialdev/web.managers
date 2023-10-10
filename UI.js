@@ -77,11 +77,12 @@ class xUILog {
 }
 
 class xUIThread extends xUILog {
-    #threadMain; #queue; #id;
+    #threadMain; #queue; #id; #onComplete
     constructor(){
         super('xUIThread');
         this.#id = new xUITools().id;
         this.#threadMain = async () => {};
+        this.#onComplete = () => super.log(new Error("thread complete, no onComplete function set"));
         this.#queue = [];
         super.log(new Error('Thread: ' + this.#id + ' Initialized'));
     }
