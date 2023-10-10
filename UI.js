@@ -5,6 +5,9 @@ class xUITools{
     get id(){ //string
         return 'x_' + (new Date().getTime() + parseInt(Math.random()*10000)).toString(16);
     }
+    get seconds() {
+        return new Date().getTime();
+    }
 }
 
 class xUILog {
@@ -55,7 +58,7 @@ class xUILog {
     set loggingEnabled(value /*boolean*/){ //-> void
         this.#loggingEnabled = value;
     }
-    log(msg /*string || JSON*/){ //-> void
+    async log(msg /*string || JSON*/){ //-> void
         if (this.#loggingEnabled){
             this.#log.push(msg);
             let entry = document.createElement('tr');
@@ -74,22 +77,30 @@ class xUILog {
 }
 
 class xUIThread extends xUILog {
-    #threadMain; #queue;
+    #threadMain; #queue; #id;
     constructor(){
         super('xUIThread');
+        this.#id = new xUITools().id;
         this.#threadMain = async () => {};
         this.#queue = [];
+        super.log(new Error('Thread: ' + this.#id + ' Initialized'));
     }
-    add(arg){ //-> anonymous function
+    get id(){
+        return this.#id;
+    }
+    async add(arg){ //-> anonymous function
         this.#queue.push(arg);
+        super.log(new Error("Argument " + arg + ' added to thread'))
     }
-    start(){ //-> void
+    async start(){ //-> void
+        super.log(new Error('Starting Thread: ' + this.#id));
         this.#threadMain().then(()=>{
             this.#queue.forEach((f) => {
+                super.log(new Error("Running Function" + f));
                 f();
             });
         }).catch((error)=>{
-            super.log(error);
+            (typeof error == "string") ? super.log(new Error(error)) : super.log(error);
         })
     }
 
@@ -171,7 +182,7 @@ class xExRef extends xUILog{
     get actionQueue(){ //-> array
         return this.#actionQueue;
     }
-    addAction(value /*anonymous function */){ //-> void
+    async addAction(value /*anonymous function */){ //-> void
         this.#actionQueue.push(value);
     }
     async append(){ //-> void
@@ -227,7 +238,7 @@ class xForm_Element extends xUILog{
     set value (value /*string*/){ //-> void
         this.#setValue(value);
     }
-    toggle(){
+    async toggle(){
         (this.#visible) ? this.#element.parentNode.style.display = 'none': this.#element.parentNode.style.display = this.#display;
         this.#visible = !(this.#element.parentNode.style.display == 'none');
     }
@@ -297,11 +308,11 @@ class xForm_Manager extends xUILog{
         (value) ? this.#wrapper.style.display = 'none': this.#wrapper.style.display ='';
         this.#visible = value;
     }
-    toggle(){ //-> void
+    async toggle(){ //-> void
         (this.#visible) ? this.#wrapper.style.display = 'none': this.#wrapper.style.display ='';
         this.#visible = (this.#visible) ? false: true; 
     }
-    addElement(id /*string*/, formElement /*xForm_Element*/){ //-> void 
+    async addElement(id /*string*/, formElement /*xForm_Element*/){ //-> void 
         this.#catalog[id] = formElement;
     }
     getElement(id /*string*/) { //-> xForm_Element
@@ -327,11 +338,11 @@ class xHTMLPane extends xUILog{
         this.#visible = value;
         (value) ? this.#element.style.display = this.#display : this.#element.style.display = 'none';
     }
-    activate(){ //-> void
+    async activate(){ //-> void
         this.#visible = true;
         this.#element.style.display = this.#display;
     }
-    hide(){ //-> void
+    async hide(){ //-> void
         this.#visible = false;
         this.#element.style.display = 'none';
     }
@@ -373,13 +384,13 @@ class xHTMLPane_Manager extends xUILog{
     getItem(key /*string*/){ //-> xHTMLPane
         return this.#catalog[key];
     }
-    setItem(key /*string*/, value /*JSON*/){ //-> void
+    async setItem(key /*string*/, value /*JSON*/){ //-> void
         this.#catalog[key] = value;
         this.#catalog[key]['Trigger'].element.addEventListener('click',()=>{
             this.activate(key);
         });
     }
-    activate(key /*string*/){ //-> void
+    async activate(key /*string*/){ //-> void
         (this.#activePane != null) ? this.#activePane['Pane'].hide(): '';
         this.#catalog[key]['Pane'].activate();
         this.#activePane = this.#catalog[key];
@@ -426,12 +437,12 @@ class xOffCanvas extends xUILog{
     set body(value /*htmlElement*/){ //-> void
         this.#body = value;
     }
-    addtrigger(trigger /*hmtlElement*/){ //-> void
+    async addtrigger(trigger /*hmtlElement*/){ //-> void
         trigger.setAttribute('data-bs-toggle', this.#id);
         this.#triggers.push(trigger);
         super.log(new Error('Trigger added to: ' + this.#id))
     }
-    addDismiss(dismiss /*htmlElement*/){ //-> void
+    async addDismiss(dismiss /*htmlElement*/){ //-> void
         dismiss.setAttribute('data-bs-dismiss', 'offcanvas');
         this.#dismisses.push(dismiss);
         super.log(new Error('Dismiss added to: ' + this.#id));
@@ -501,10 +512,10 @@ class xEventListener extends xUILog{
     set eventAction(value /*function*/){
         this.#eventAction = value;
     }
-    setEvent(){ //-> void
+    async setEvent(){ //-> void
         this.#event = this.#element.addEventListener(this.#type, this.#eventAction);
     }
-    removeEvent(){ //-> void
+    async removeEvent(){ //-> void
         this.#element.removeEventListener(this.#type, this.#event);
     }
 }
@@ -540,11 +551,11 @@ class xModal extends xUILog{
     set body(value /*htmlElement*/){ //-> void
         this.#body = value;
     }
-    addtrigger(trigger /*hmtlElement*/){ //-> void
+    async addtrigger(trigger /*hmtlElement*/){ //-> void
         trigger.setAttribute('data-bs-toggle', this.#id);
         this.#triggers.push(trigger);
     }
-    addDismiss(dismiss /*htmlElement*/){ //-> void
+    async addDismiss(dismiss /*htmlElement*/){ //-> void
         dismiss.setAttribute('data-bs-dismiss', 'modal');
         this.#dismisses.push(dismiss);
     }

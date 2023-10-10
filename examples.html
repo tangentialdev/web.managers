@@ -58,6 +58,7 @@
                         </div>
                     </div>
                     <!--END Off Canvas and Error Log Example--------------------------------------->
+
                     <!-- START Modal Example ----------------------->
                     <div class="col-sm-12 col-md-12 col-lg-12">
                         <div class="card card-body">
@@ -115,7 +116,8 @@
             </div>
             <div class="row mt-4">
                 <div class="col-sm-12 col-md-12 col-lg-12">
-                    <!-- START Carousel Example -->
+                    <!-- START Carousel Example ---------------------------------------->
+                    <h5 class="text-primary">Carousel Example</h5>
                     <div id="example-carousel" class="carousel slide bg-light" >
                         <div class="carousel-indicators">
                           <button type="button" data-bs-target="#example-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -142,29 +144,65 @@
                           <span class="visually-hidden">Next</span>
                         </button>
                     </div>
-                    <!-- END Carousel Example -->
+                    <!-- END Carousel Example -------------------------------->
                 </div>
             </div>
-            
-        </div>
-        <!-- START: Error Log ------------------------------>
-
-            <div class="offcanvas offcanvas-end bg-light" tabindex="-1" id="offcanvas-error-wrapper" aria-labelledby="offcanvasExampleLabel">
-                <div class="offcanvas-resize">
-                    <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="offcanvas-error-label">Error Log</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" id="offcanvas-example-close"></button>
-                      </div>
-                      <div class="offcanvas-body" style="overflow-y:auto;height:90vh; cursor:default">
-                            <div class="accordion" id="offcanvas-error-log"  >
-        
+            <div class="row mt-4">
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <!-- START Thread Example ------------------------------------->
+                    <h5 class="text-primary">Thread Example</h5>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-center">
+                                <button type="button" id="example-start-threads" class="btn btn-md btn-primary">Start Threads</button>
                             </div>
-                      </div>
+                        </div>
+                    </div>
+                    <div class="card card-body">
+                        <div class="d-flex justify-content-between mb-3">
+                            <label>Add Thread</label>
+                            <button type="button" id="example-add-thread" class="btn btn-sm btn-outline-info">Add Thread</button>
+                        </div>
+                        <div id="example-thread-body"></div>
+                    </div>
+                    <!-- END Thread Example ----------------------------------->
                 </div>
-               
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <!-- START External Reference Example ------------------------------------->
+                    <h5 class="text-primary">External Reference</h5>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-center">
+                                <button type="button" id="example-external-reference" class="btn btn-md btn-secondary">Call External Reference</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card card-body">
+                        <div id="example-external-reference-response">
+
+                        </div>
+                    </div>
+                    <!-- END External Reference Example ----------------------------------->
+                </div>
             </div>
-       
+        </div>
+        
+        
+        <!-- START: Error Log ------------------------------>
+        <div class="offcanvas offcanvas-end bg-light" tabindex="-1" id="offcanvas-error-wrapper" aria-labelledby="offcanvasExampleLabel">
+            <div class="offcanvas-resize">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvas-error-label">Error Log</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" id="offcanvas-example-close"></button>
+                </div>
+                <div class="offcanvas-body" style="overflow-y:auto;height:90vh; cursor:default">
+                    <div class="accordion" id="offcanvas-error-log"  >
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- END: Error Log --------------------------->
+        
         <!-- START: Modal Example---------------------------->
         <div class="modal" tabindex="-1" id="example-modal-wrapper">
             <div class="modal-dialog">
@@ -253,12 +291,63 @@
             modal.addDismiss(mDismissP);
             modal.addDismiss(mSave);
         </script>
+
         <script id="example-carousel">
             let exWrapper = document.getElementById("example-carousel");
             let exCarousel = new xCarousel(exWrapper);
             let newSlide = document.createElement('h5');
             newSlide.innerText = "Hello World. I'm a dynamically added Slide";
             exCarousel.addSlide(newSlide, 'Dynamically Added');
+        </script>
+
+        <script id="example-thread">
+            let threadHTMLBody = document.getElementById('example-thread-body');
+            let threads = {};
+            
+            let addThreadEvent = new xEventListener(document.getElementById('example-add-thread'), 'click');
+            addThreadEvent.eventAction = () =>{
+                let id = new xUITools().id;
+                let mThread = new xUIThread();
+                threads[id] = mThread;
+                let div = document.createElement('div');
+                div.className = 'card';
+                let newThreadHTML = '<div class=\"card-header\">' +
+                                        '<div class=\"d-flex justify-content-between\">' +
+                                            '<label class=\"thread-name\">Thread: ' + id +'</label>' +
+                                            '<label class=\"queue-count\">0</label>' +
+                                            '<button type=\"button\" class=\"btn btn-sm btn-outline-secondary example-add-to-thread\">Add to Thread</button>' +
+                                        '</div>' +
+                                        '</div>' +
+                                    '<div class=\"card-body\">' +
+                                        '<div class=\"thread-body\" style=\"max-height:200px; overflow-y:auto;\"">' +
+                                        '</div>' +
+                                    '</div>';
+                div.innerHTML = newThreadHTML;
+                threadHTMLBody.appendChild(div);
+                
+                let addToThreadEvent = new xEventListener(div.getElementsByClassName('example-add-to-thread')[0], 'click');
+                addToThreadEvent.eventAction = () =>{
+                    let func = () =>{
+                        setTimeout(() => {
+                            div.getElementsByClassName('thread-body')[0].innerHTML += 'Thread: ' + id + ' firing @ ' + new xUITools().seconds + '<br>';
+                        }, 1000 * Math.random());
+                    }
+                    div.getElementsByClassName('queue-count')[0].innerText = parseInt(div.getElementsByClassName('queue-count')[0].innerText) + 1;
+                    threads[id].add(func);
+                }
+                addToThreadEvent.setEvent();
+            }
+            addThreadEvent.setEvent();
+            
+            let startThreadsEvent = new xEventListener(document.getElementById('example-start-threads'), 'click');
+            startThreadsEvent.eventAction = () => {
+                console.log(threads);
+                Object.keys(threads).forEach((key)=>{
+                    threads[key].start();
+                });
+            }
+            startThreadsEvent.setEvent();
+            
         </script>
     </body>
 </html>
