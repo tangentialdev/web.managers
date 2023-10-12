@@ -351,7 +351,9 @@
         </script>
         
         <script id="example-external-reference">
-          let xref = new xExternalReference()
+          let parent = document.getElementById("example-external-reference-response")
+          let xref = new xExternalReference('div', 'external-reference-example.html', parent
+          );
           
           
         </script>
