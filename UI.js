@@ -271,7 +271,7 @@ class xExRef extends xUILog {
   }
   async append() {
     //-> void
-    this.#request = this.#responseBody;
+    this.#request.responseBody = this.#responseBody;
     this.#request.send().then(() => {
       this.#action().catch((error) => {
         super.log(error);
