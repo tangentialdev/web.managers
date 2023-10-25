@@ -22,6 +22,8 @@ class xUITools {
     let hour = d.getHour().pad(1);
     let min = d.getMinutes().pad(1);
     let sec = d.getSeconds().pad(1);
+    return day + '/' + month + '/' + day +
+           ' ' + hour +':'+ min+ ':'+ sec;
   }
 }
 
