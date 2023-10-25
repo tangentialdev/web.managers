@@ -11,10 +11,10 @@ class xUITools {
   get seconds() {
     return new Date().getTime();
   }
-  get timestamp(){
-    return 
+  get timestamp() {
+    return;
   }
-  #timestamp(){
+  #timestamp() {
     let d = new Date();
     let day = d.getDay().pad(1);
     let month = d.getMonth().pad(1);
@@ -147,7 +147,7 @@ class xUIThread extends xUILog {
   get id() {
     return this.#id;
   }
-  get onComplete(){ 
+  get onComplete() {
     return this.#onComplete;
   }
   set onComplete(value /*function*/) {
