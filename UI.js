@@ -865,5 +865,15 @@ class xKeyLog {
   #log;
   constructor(){
     this.#log = {};
-    this.
+  }
+  addLog(target /*htmlElement*/, keys="*" /*regexp*/){
+    
+  }
+}
+
+class xKeyLogger{
+  #target; #keys;
+  constructor(target, keys){
+    
+  }
 }
