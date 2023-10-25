@@ -863,17 +863,16 @@ class xCarousel extends xUILog {
 
 class xKeyLog {
   #log;
-  constructor(){
+  constructor() {
     this.#log = {};
   }
-  addLog(target /*htmlElement*/, keys="*" /*regexp*/){
-    
+  addLog(target /*htmlElement*/, keys = "*" /*regexp*/) {
+    nick
   }
 }
 
-class xKeyLogger{
-  #target; #keys;
-  constructor(target, keys){
-    
-  }
+class xKeyLogger {
+  #target;
+  #keys;
+  constructor(target, keys) {}
 }
