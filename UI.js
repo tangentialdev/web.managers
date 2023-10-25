@@ -12,7 +12,7 @@ class xUITools {
     return new Date().getTime();
   }
   get timestamp() {
-    return;
+    return this.#timestamp();
   }
   #timestamp() {
     let d = new Date();
@@ -22,8 +22,7 @@ class xUITools {
     let hour = d.getHour().pad(1);
     let min = d.getMinutes().pad(1);
     let sec = d.getSeconds().pad(1);
-    return day + '/' + month + '/' + day +
-           ' ' + hour +':'+ min+ ':'+ sec;
+    return day + "/" + month + "/" + day + " " + hour + ":" + min + ":" + sec;
   }
 }
 
