@@ -868,7 +868,7 @@ class xKeyLog extends xUILog {
   }
   addLog(target /*htmlElement*/, keys = "*" /*regexp*/) {
     let id = target.id || new xTools().id;
-    this.#catalog{id} = new xKeyLogger(target, keys)
+    this.#catalog{id} = new xKeyLogger(target, keys);
   }
 }
 
