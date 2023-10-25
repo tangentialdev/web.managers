@@ -861,13 +861,13 @@ class xCarousel extends xUILog {
   }
 }
 
-class xKeyLog {
-  #log;
+class xKeyLog extends xUILog {
+  #catalog;
   constructor() {
-    this.#log = {};
+    this.#catalog = {};
   }
   addLog(target /*htmlElement*/, keys = "*" /*regexp*/) {
-    nick
+    this.#catalog{id} = new xKeyLogger(target, keys)
   }
 }
 
