@@ -11,6 +11,18 @@ class xUITools {
   get seconds() {
     return new Date().getTime();
   }
+  get timestamp(){
+    return 
+  }
+  #timestamp(){
+    let d = new Date();
+    let day = d.getDay().pad(1);
+    let month = d.getMonth().pad(1);
+    let year = d.getYear();
+    let hour = d.getHour().pad(1);
+    let min = d.getMinutes().pad(1);
+    let sec = d.getSeconds().pad(1);
+  }
 }
 
 class xUILog {
