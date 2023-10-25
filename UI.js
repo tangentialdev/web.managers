@@ -861,7 +861,7 @@ class xCarousel extends xUILog {
   }
 }
 
-class xKeyLog{
+class xKeyLog {
   #log;
   constructor(){
     this.#log = {};
