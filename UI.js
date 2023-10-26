@@ -871,6 +871,7 @@ class xKeyLog extends xUILog {
     let id = target.id || new xTools().id;
     this.#catalog{id} = new xKeyListener(target, keys);
   }
+  
 }
 
 class xKeyListener extends xUILog{
@@ -884,6 +885,9 @@ class xKeyListener extends xUILog{
     this.#keys = keys;
     this.#listener = new xEventListener(target, 'keypress');
     this.#action = () => {};
+  }
+  get listener(){
+    return this.#listener;
   }
   set action(value){
     this.#action = value;
