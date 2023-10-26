@@ -888,4 +888,8 @@ class xKeyListener extends xUILog{
   set action(value){
     this.#action = value;
   }
+  setListener(){
+    // add listener and action 
+    // ser event
+  }
 }
