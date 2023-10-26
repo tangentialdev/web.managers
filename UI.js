@@ -878,7 +878,7 @@ class xKeyListener extends xUILog{
   #keys;
   #listener;
   #action;
-  constructor(target, keys) {
+  constructor(target /*htmlElement*/, keys /*regexp*/) {
     super('xKeyListener');
     this.#target = target;
     this.#keys = keys;
@@ -889,6 +889,12 @@ class xKeyListener extends xUILog{
     this.#action = value;
   }
   setListener(){
+    this.#listener.eventAction = (e) =>{
+      if (e.target == this.#target) {
+        let pat = /this.#keys/;
+        pat.find(e.keypress);
+      }
+    }
     // add listener and action 
     // ser event
   }
