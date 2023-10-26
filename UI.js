@@ -898,7 +898,6 @@ class xKeyListener extends xUILog{
         }
       }
     }
-    // add listener and action 
-    // ser event
+    this.#listener.setEvent();
   }
 }
