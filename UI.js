@@ -873,7 +873,7 @@ class xKeyLog extends xUILog {
   }
 }
 
-class xKeyLogger extends xUILog{
+class xKeyListener extends xUILog{
   #target;
   #keys;
   #listener;
