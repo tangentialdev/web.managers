@@ -876,8 +876,14 @@ class xKeyLog extends xUILog {
 class xKeyLogger {
   #target;
   #keys;
+  #listener;
+  #action;
   constructor(target, keys) {
     this.#target = target;
     this.#keys = keys;
+    this.#listener = new xEventListener(target, 'keypress');
+  }
+  set action(value){
+    this.#action = value;
   }
 }
