@@ -893,7 +893,9 @@ class xKeyListener extends xUILog{
       if (e.target == this.#target) {
         let pat = /this.#keys/;
         let pressedKeys = e.keycode || e.which;
-        pat.find(pressedKeys);
+        if (pat.test(pressedKeys)){
+          this.#action();
+        }
       }
     }
     // add listener and action 
