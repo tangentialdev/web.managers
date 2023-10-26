@@ -883,6 +883,7 @@ class xKeyListener extends xUILog{
     this.#target = target;
     this.#keys = keys;
     this.#listener = new xEventListener(target, 'keypress');
+    this.#action = () => {};
   }
   set action(value){
     this.#action = value;
