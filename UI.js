@@ -207,7 +207,7 @@ class xHttpRequest extends xUILog {
   }
   async send() {
     //-> void
-    this.#request = await new fetch(this.#requestUrl, {
+    return this.#request = await fetch(this.#requestUrl, {
       Method: this.#requestType,
       Headers: {
         Accept: "application.json",
@@ -217,10 +217,12 @@ class xHttpRequest extends xUILog {
       Cache: "default",
     })
       .then((r) => {
-        return r.json();
+        return r.text();
       })
       .then((data) => {
+        this.#data = data;
         this.#responseBody(data);
+        return data;
       })
       .catch((error) => {
         super.log(error);
@@ -235,6 +237,7 @@ class xExRef extends xUILog {
   #request;
   #element;
   #actionQueue;
+  #asyncFunction;
   constructor(tagName /*string*/, src /*string*/, parent /*htmlElement*/) {
     //-> void
     super("xExref");
@@ -244,6 +247,7 @@ class xExRef extends xUILog {
     this.#element = document.createElement(this.#tagName);
     this.#request = new xHttpRequest("GET", this.#src);
     this.#actionQueue = [];
+    this.#asyncFunction = (async () => {}).constructor;
   }
   get tagName() {
     //-> string
@@ -271,27 +275,44 @@ class xExRef extends xUILog {
   }
   async append() {
     //-> void
-    this.#request.responseBody = this.#responseBody;
+    this.#request.responseBody = () => this.#responseBody(this.#request.data);
     this.#request.send().then(() => {
       this.#action().catch((error) => {
-        super.log(error);
+        super.log(new Error(error));
       });
     });
   }
   #responseBody(data /*string*/) {
     // -> void
     this.#element.innerHTML = data;
+    this.#parent.appendChild(this.#element);
   }
   async #action() {
     if (this.#actionQueue.length >= 1) {
       // add in if something is async use then, otherwise use inline
-      this.actionQueue[0]();
-      this.#actionQueue.unshift();
-      this.actionQueue.length > 1
-        ? this.#action().catch((error) => {
-            super.log(error);
-          })
-        : "";
+      let test = new Promise((resolve, reject) => {
+        (this.#actionQueue[0] instanceof this.#asyncFunction)? resolve(true): reject(false);
+      });
+      Promise.all([test]).then(([value])=> {
+        if(value){
+            this.#actionQueue[0]().then(()=>{
+                this.#actionQueue.unshift();
+                this.#actionQueue.length >=1 
+                ? this.#action().catch((error) => {
+                    super.log(new Error(error));
+                    })
+                : "";
+            });
+        }else{
+            this.#actionQueue[0]();
+            this.#actionQueue.unshift();
+            this.#actionQueue.length >=1 
+                ? this.#action().catch((error) => {
+                    super.log(new Error(error));
+                })
+            : "";
+        }
+      });
     }
   }
 }

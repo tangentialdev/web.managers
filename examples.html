@@ -351,10 +351,26 @@
         </script>
         
         <script id="example-external-reference">
-          let parent = document.getElementById("example-external-reference-response")
-          let xref = new xExRef('div', 'external-reference-example.html', parent
-          );
-          xref.append();
+            let extraAction1 = () => {
+                setTimeout(() =>{
+                    xref.element.getElementsByTagName("label")[0].className = "text-success";
+                }, 3000)
+            }
+            let extraAction2 = () => {
+                console.log('extraAction2');
+                setTimeout(() =>{
+                    xref.element.getElementsByTagName("label")[0].innerText = "secondary actions firing here!";
+                }, 1000)
+            }
+            let parent = document.getElementById("example-external-reference-response")
+            let xref = new xExRef('div', 'external-reference-example.html', parent);
+            xref.addAction(extraAction1);
+            xref.addAction(extraAction2);
+            let exRefEvent = new xEventListener(document.getElementById("example-external-reference"), 'click' );
+                exRefEvent.eventAction = () => {
+                xref.append();
+            }
+            exRefEvent.setEvent();
           
         </script>
     </body>
