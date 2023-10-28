@@ -1,4 +1,4 @@
-//Elements Missing -- Modals, queue error log, carousel, text scroll
+//Elements Missing -- Modals, queue error log, carousel, text scroll, key logging
 class xUITools {
   constructor() {}
   get id() {
@@ -10,6 +10,19 @@ class xUITools {
   }
   get seconds() {
     return new Date().getTime();
+  }
+  get timestamp() {
+    return this.#timestamp();
+  }
+  #timestamp() {
+    let d = new Date();
+    let day = d.getDay().pad(1);
+    let month = d.getMonth().pad(1);
+    let year = d.getYear();
+    let hour = d.getHour().pad(1);
+    let min = d.getMinutes().pad(1);
+    let sec = d.getSeconds().pad(1);
+    return day + "/" + month + "/" + day + " " + hour + ":" + min + ":" + sec;
   }
 }
 
@@ -135,7 +148,7 @@ class xUIThread extends xUILog {
   get id() {
     return this.#id;
   }
-  get onComplete(){ 
+  get onComplete() {
     return this.#onComplete;
   }
   set onComplete(value /*function*/) {
@@ -866,5 +879,50 @@ class xCarousel extends xUILog {
     } else {
       super.log(new Error("Carousel Framework Not Present, slide not added"));
     }
+  }
+}
+
+class xKeyLog extends xUILog {
+  #catalog;
+  constructor() {
+    super('xKeyLog');
+    this.#catalog = {};
+  }
+  addLog(key /*string*/, listener /*xKeyListener*/) {
+    let id = target.id || new xTools().id;
+    this.#catalog{id} = new xKeyListener(target, keys);
+  }
+  
+}
+
+class xKeyListener extends xUILog{
+  #target;
+  #keys;
+  #listener;
+  #action;
+  constructor(target /*htmlElement*/, keys /*regexp*/) {
+    super('xKeyListener');
+    this.#target = target;
+    this.#keys = keys;
+    this.#listener = new xEventListener(target, 'keypress');
+    this.#action = () => {};
+  }
+  get listener(){
+    return this.#listener;
+  }
+  set action(value){
+    this.#action = value;
+  }
+  setListener(){
+    this.#listener.eventAction = (e) =>{
+      if (e.target == this.#target) {
+        let pat = /this.#keys/;
+        let pressedKeys = e.keycode || e.which;
+        if (pat.test(pressedKeys)){
+          this.#action();
+        }
+      }
+    }
+    this.#listener.setEvent();
   }
 }
