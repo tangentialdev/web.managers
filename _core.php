@@ -1,6 +1,7 @@
 <?php
     class xDB{
         //password_hash(PASSWORD_DEFAULT) -> used for hashing passwords. Want to see where I should best do this
+        //create logging
         private $serverName; 
         private $username; 
         private $password; 
