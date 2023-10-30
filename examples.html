@@ -185,6 +185,34 @@
                     <!-- END External Reference Example ----------------------------------->
                 </div>
             </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <!-- START KEY LISTENER EXAMPLE ----------------------------------------->
+                    <h5 class="text-primary mt-4">Key Listener and Logger</h5>
+                    <div class="card">
+                        <div class="card-header">
+                            Press `control/command + B`to display key log
+                        </div>
+                        <div class="card-body" style="height: 400px;overflow-y:auto;" id="key-listener-example">
+                            <pre id="key-log-example-print"></pre>
+                        </div>
+                    </div>
+                    <!-- END Key Listener Example--------------------------------- -->
+                </div>
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <!-- START Error Log Export ----------------------------------------->
+                    <h5 class="text-primary mt-4">Error Log Export</h5>
+                    <div class="card">
+                        <div class="card-header">
+                            <button id="example-error-export" class="btn btn-outline-success btn-md">Export Error Log</button>
+                        </div>
+                        <div class="card-body" style="height: 400px;overflow-y:auto;" id="key-listener-example">
+                            <pre id="example-error-log-export"></pre>
+                        </div>
+                    </div>
+                    <!-- END Error Log Export--------------------------------- -->
+                </div>
+            </div>
         </div>
         
         
@@ -228,7 +256,7 @@
             let cWrapper = document.getElementById('offcanvas-error-wrapper');
             let cDismiss = document.getElementById('offcanvas-example-close');
             let cTrigger = document.getElementById('offcanvas-example-trigger');
-            let offCanvas = new xOffCanvas(cWrapper, cDismiss, cTrigger);
+            let offCanvas = new xOffCanvas(cWrapper, cDismiss, cTrigger, cWrapper.id);
         </script>
         
         <script id="example-Pane-Manager">
@@ -287,7 +315,7 @@
             let mDismissP = document.getElementById('example-modal-dismiss');
             let mSave = document.getElementById('example-modal-save');
             let mTrigger = document.getElementById('example-modal-trigger');
-            let modal = new xModal(mWrapper, mDismissX, mTrigger);
+            let modal = new xModal(mWrapper, mDismissX, mTrigger, mWrapper.id);
             modal.addDismiss(mDismissP);
             modal.addDismiss(mSave);
         </script>
@@ -351,7 +379,7 @@
         </script>
         
         <script id="example-external-reference">
-            let extraAction1 = () => {
+            let extraAction1 = async () => {
                 setTimeout(() =>{
                     xref.element.getElementsByTagName("label")[0].className = "text-success";
                 }, 3000)
@@ -372,6 +400,31 @@
             }
             exRefEvent.setEvent();
           
+        </script>
+
+        <script id="example-key-logging">
+            let keys = [66, 91];
+            let keyListener = new xKeyListener(keys);
+            let inputListener = new xKeyListener([], document.getElementById("example-input-1") );
+            let keyLog = new xKeyLog();
+            keyLog.addListener('document', keyListener)
+            keyLog.addListener(inputListener.id, inputListener);
+            keyListener.action = () => {
+                document.getElementById("key-log-example-print").innerHTML = keyLog.toJSON;
+            }
+            inputListener.setListener();
+            keyListener.setListener();
+        </script>
+        
+        <script id="example-error-logging-export">
+            let target = document.getElementById("example-error-export");
+            let dest = document.getElementById("example-error-log-export");
+            let displayEvent = new xEventListener(target, 'click');
+            displayEvent.eventAction = ()=>{
+                dest.innerText = paneManager.toJSON;
+                dest.innerText+= offCanvas.toJSON;
+            };
+            displayEvent.setEvent();
         </script>
     </body>
 </html>
