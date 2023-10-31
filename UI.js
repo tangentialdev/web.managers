@@ -169,6 +169,7 @@ class xUIThread extends xUILog {
   }
   get onComplete() {
     //-> function
+    super.log(new Error("fetching property on complete: " + this.#onComplete))
     return this.#onComplete;
   }
   set onComplete(value /*function*/) {
