@@ -328,26 +328,31 @@ class xExRef extends xUILog {
   }
   get parent() {
     //-> htmlElement
-    super.log(new Error("parent fetched: " this.#parent))
+    super.log(new Error("parent fetched: " this.#parent.tagName))
     return this.#parent;
   }
   get element() {
     //-> htmlElement
+    super.log(new Error("element fetched: "+ this.#element.tagName));
     return this.#element;
   }
   get actionQueue() {
     //-> array
+    super.log(new Error("action queue fetched: "+ this.#actionQueue));
     return this.#actionQueue;
   }
   async addAction(value /*anonymous function */) {
     //-> void
+    super.log(new Error("added to action queue: "+ value))
     this.#actionQueue.push(value);
   }
   async append() {
     //-> void
+    super.log(new Error("fetching external refernce... "));
     this.#request.responseBody = () => this.#responseBody(this.#request.data);
     this.#request.send().then(() => {
-      this.#action().catch((error) => {
+      this.#action().then(() => {super.log(new Error("external reference complete"));
+      }).catch((error) => {
         super.log(new Error(error));
       });
     });
@@ -356,6 +361,7 @@ class xExRef extends xUILog {
     // -> void
     this.#element.innerHTML = data;
     this.#parent.appendChild(this.#element);
+    super.log(new Error("external reference action complete"));
   }
   async #action() {
     if (this.#actionQueue.length >= 1) {
@@ -367,8 +373,11 @@ class xExRef extends xUILog {
       Promise.all([test])
         .then(([value]) => {
           if (value) {
+            super.log(new Error("firing async function: " + this.#actionQueue[0]))
             this.#actionQueue[0]().then(() => {
+              super.log(new Error("async function complete: " + this.#actionQueue[0]));
               this.#actionQueue.shift();
+              super.log(new Error("incrementing queue"));
               if (this.#actionQueue.length >= 1) {
                 this.#action().catch((error) => {
                   super.log(new Error(error));
