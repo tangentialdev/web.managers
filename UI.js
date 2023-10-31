@@ -239,6 +239,7 @@ class xHttpRequest extends xUILog {
   }
   get data() {
     //-> string
+    super.log(new Error("data fetched"));
     return this.#data;
   }
   get promise() {
