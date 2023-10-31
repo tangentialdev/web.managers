@@ -309,21 +309,26 @@ class xExRef extends xUILog {
     this.#actionQueue = [];
     this.#asyncFunction = (async () => {}).constructor;
     this.#id = id;
+    super.log(new Error("xExEef class initialized"));
   }
   get id() {
     //-> string
+    super.log(new Error("id fetched: " + this.#id));
     return this.#id;
   }
   get tagName() {
     //-> string
+    super.log(new Error("tagName fetched: " + this.#tagName));
     return this.#tagName;
   }
   get src() {
     //-> string
+    super.log(new Error("src fetched: "+ this.#src));
     return this.#src;
   }
   get parent() {
     //-> htmlElement
+    super.log(new Error("parent fetched: " this.#parent))
     return this.#parent;
   }
   get element() {
