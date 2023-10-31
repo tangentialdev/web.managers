@@ -174,7 +174,7 @@ class xUIThread extends xUILog {
   }
   set onComplete(value /*function*/) {
     this.#onComplete = value;
-    super.log(new Error("OnComplete Function Set"));
+    super.log(new Error("setting property onComplete: " + this.#onComplete));
   }
   async add(arg /*function*/) {
     //-> void
