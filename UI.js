@@ -385,8 +385,11 @@ class xExRef extends xUILog {
               }
             });
           } else {
+            super.log(new Error("firing synchronous function: " + this.#actionQueue[0]))
             this.#actionQueue[0]();
+            super.log(new Error("async function complete: " + this.#actionQueue[0]));
             this.#actionQueue.shift();
+             super.log(new Error("incrementing queue"));
             if (this.#actionQueue.length >= 1) {
               this.#action().catch((error) => {
                 super.log(new Error(error));
