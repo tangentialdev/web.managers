@@ -244,6 +244,7 @@ class xHttpRequest extends xUILog {
   }
   get promise() {
     //-> promise
+    super.log("promise fetched");
     return this.#request;
   }
   set responseBody(value /*function*/) {
