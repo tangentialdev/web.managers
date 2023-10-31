@@ -224,17 +224,17 @@ class xHttpRequest extends xUILog {
   }
   get requestType() {
     //-> string
-    super.log(new Error("request type fetched: "+ this.#requestType));
+    super.log(new Error("request type fetched: " + this.#requestType));
     return this.#requestType;
   }
   get requestUrl() {
     //-> string
-    super.log(new Error("request url fetched: "+ this.#requestUrl));
+    super.log(new Error("request url fetched: " + this.#requestUrl));
     return this.#requestUrl;
   }
   get responseBody() {
     //-> function
-    super.log(new Error("response body fetched: "+ this.#responseBody));
+    super.log(new Error("response body fetched: " + this.#responseBody));
     return this.#responseBody;
   }
   get data() {
@@ -259,6 +259,7 @@ class xHttpRequest extends xUILog {
   }
   async send() {
     //-> void
+    super.log(new Error("sending request to: " + this.#requestUrl + "of type: " + this.#requestType +" with data: "+ this.#data));
     return (this.#request = await fetch(this.#requestUrl, {
       Method: this.#requestType,
       Headers: {
@@ -273,7 +274,8 @@ class xHttpRequest extends xUILog {
       })
       .then((data) => {
         this.#data = data;
-        this.#responseBody(data);
+        this.#responseBody(data)
+        super.log(new Error("response recieved: "+ this.#data))
         return data;
       })
       .catch((error) => {
