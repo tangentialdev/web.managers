@@ -8,13 +8,16 @@ class xUITools {
       (new Date().getTime() + parseInt(Math.random() * 10000)).toString(16)
     );
   }
-  get seconds() { //-> long
+  get seconds() {
+    //-> long
     return new Date().getTime();
   }
-  get timestamp() { //-> string
+  get timestamp() {
+    //-> string
     return this.#timestamp();
   }
-  #timestamp() { //-> string
+  #timestamp() {
+    //-> string
     let d = new Date();
     let day = d.getDay().pad(1);
     let month = d.getMonth().pad(1);
@@ -86,7 +89,7 @@ class xUILog {
           .appendChild(this.#frame)
       : "";
   }
-  get toJSON(){
+  get toJSON() {
     return JSON.stringify(this.#log, undefined, 2);
   }
   get source() {
@@ -109,9 +112,14 @@ class xUILog {
     //-> void
     if (this.#loggingEnabled) {
       this.#log.push(
-            new xUITools().seconds + " | " + 
-            msg.stack.slice(msg.stack.lastIndexOf("/") + 1, msg.stack.length).replace(")", "") + " | " +
-             msg.message);
+        new xUITools().seconds +
+          " | " +
+          msg.stack
+            .slice(msg.stack.lastIndexOf("/") + 1, msg.stack.length)
+            .replace(")", "") +
+          " | " +
+          msg.message
+      );
       let entry = document.createElement("tr");
       if (msg instanceof Error) {
         entry.innerHTML =
@@ -144,7 +152,8 @@ class xUIThread extends xUILog {
   #queue;
   #id;
   #onComplete;
-  constructor(id=new xUITools().id) { //-> xUIThread
+  constructor(id = new xUITools().id) {
+    //-> xUIThread
     super("xUIThread", id);
     this.#id = id;
     this.#threadMain = async () => {};
@@ -153,21 +162,25 @@ class xUIThread extends xUILog {
     this.#queue = [];
     super.log(new Error("Thread: " + this.#id + " Initialized"));
   }
-  get id() { //-> string
+  get id() {
+    //-> string
     return this.#id;
   }
-  get onComplete() { //-> function
+  get onComplete() {
+    //-> function
     return this.#onComplete;
   }
   set onComplete(value /*function*/) {
     this.#onComplete = value;
     super.log(new Error("OnComplete Function Set"));
   }
-  async add(arg /*function*/) { //-> void
+  async add(arg /*function*/) {
+    //-> void
     this.#queue.push(arg);
     super.log(new Error("Argument " + arg + " added to thread"));
   }
-  async start() {//-> void
+  async start() {
+    //-> void
     super.log(new Error("Starting Thread: " + this.#id));
     this.#threadMain()
       .then(() => {
@@ -191,7 +204,12 @@ class xHttpRequest extends xUILog {
   #responseBody;
   #data;
   #id;
-  constructor(requestType /*string*/, requestUrl /*string*/, id=new xUITools().id) {//-> xHttpRequest
+  constructor(
+    requestType /*string*/,
+    requestUrl /*string*/,
+    id = new xUITools().id
+  ) {
+    //-> xHttpRequest
     super("xHttpRequest", id);
     this.#requestType = requestType;
     this.#requestUrl = requestUrl;
@@ -199,21 +217,24 @@ class xHttpRequest extends xUILog {
     this.#id = id;
     super.log(new Error("xHttpRequest Object Initialized"));
   }
-  get id(){ //-> string
-   super.log("id fetched");
+  get id() {
+    //-> string
+    super.log(new Error("id fetched"));
     return this.#id;
   }
   get requestType() {
     //-> string
-    super.log("request type fetched");
+    super.log(new Error("request type fetched"));
     return this.#requestType;
   }
   get requestUrl() {
     //-> string
+    super.log(new Error("request url fetched"));
     return this.#requestUrl;
   }
   get responseBody() {
-    //-> anonymous function
+    //-> function
+    super.log(new Error("response body fetched"));
     return this.#responseBody;
   }
   get data() {
@@ -236,7 +257,7 @@ class xHttpRequest extends xUILog {
   }
   async send() {
     //-> void
-    return this.#request = await fetch(this.#requestUrl, {
+    return (this.#request = await fetch(this.#requestUrl, {
       Method: this.#requestType,
       Headers: {
         Accept: "application.json",
@@ -255,7 +276,7 @@ class xHttpRequest extends xUILog {
       })
       .catch((error) => {
         super.log(error);
-      });
+      }));
   }
 }
 
@@ -268,7 +289,12 @@ class xExRef extends xUILog {
   #actionQueue;
   #asyncFunction;
   #id;
-  constructor(tagName /*string*/, src /*string*/, parent /*htmlElement*/, id=new xUITools().id) {
+  constructor(
+    tagName /*string*/,
+    src /*string*/,
+    parent /*htmlElement*/,
+    id = new xUITools().id
+  ) {
     //-> xExref
     super("xExRef", id);
     this.#tagName = tagName;
@@ -280,7 +306,8 @@ class xExRef extends xUILog {
     this.#asyncFunction = (async () => {}).constructor;
     this.#id = id;
   }
-  get id(){ //-> string
+  get id() {
+    //-> string
     return this.#id;
   }
   get tagName() {
@@ -303,10 +330,12 @@ class xExRef extends xUILog {
     //-> array
     return this.#actionQueue;
   }
-  async addAction(value /*anonymous function */) {//-> void
+  async addAction(value /*anonymous function */) {
+    //-> void
     this.#actionQueue.push(value);
   }
-  async append() {//-> void
+  async append() {
+    //-> void
     this.#request.responseBody = () => this.#responseBody(this.#request.data);
     this.#request.send().then(() => {
       this.#action().catch((error) => {
@@ -320,32 +349,36 @@ class xExRef extends xUILog {
     this.#parent.appendChild(this.#element);
   }
   async #action() {
-    if (this.#actionQueue.length >= 1 ) {
+    if (this.#actionQueue.length >= 1) {
       let test = new Promise((resolve) => {
-        (this.#actionQueue[0] instanceof this.#asyncFunction)? resolve(true): resolve(false);
+        this.#actionQueue[0] instanceof this.#asyncFunction
+          ? resolve(true)
+          : resolve(false);
       });
-      Promise.all([test]).then(([value])=> {
-        if(value){
-            this.#actionQueue[0]().then(()=>{
-                this.#actionQueue.shift();
-                if(this.#actionQueue.length >=1 ){
-                    this.#action().catch((error) => {
-                        super.log(new Error(error));
-                    });
-                }
+      Promise.all([test])
+        .then(([value]) => {
+          if (value) {
+            this.#actionQueue[0]().then(() => {
+              this.#actionQueue.shift();
+              if (this.#actionQueue.length >= 1) {
+                this.#action().catch((error) => {
+                  super.log(new Error(error));
+                });
+              }
             });
-        }else{
+          } else {
             this.#actionQueue[0]();
             this.#actionQueue.shift();
-            if(this.#actionQueue.length >=1 ){
-                this.#action().catch((error) => {
-                    super.log(new Error(error));
-                });
+            if (this.#actionQueue.length >= 1) {
+              this.#action().catch((error) => {
+                super.log(new Error(error));
+              });
             }
-        }
-      }).catch((error)=>{
-        super.log(new Error(error));
-      });
+          }
+        })
+        .catch((error) => {
+          super.log(new Error(error));
+        });
     }
   }
 }
@@ -356,7 +389,11 @@ class xForm_Element extends xUILog {
   #visible;
   #display;
   #id;
-  constructor(element /*htmlElement*/, override = "" /*string*/, id=new xUITools().id) {
+  constructor(
+    element /*htmlElement*/,
+    override = "" /*string*/,
+    id = new xUITools().id
+  ) {
     //-> void
     super("xFormElement", id);
     this.#element = element;
@@ -365,7 +402,7 @@ class xForm_Element extends xUILog {
     this.#display = this.#element.parentNode.style.display;
     this.#id = id;
   }
-  get id(){
+  get id() {
     return this.#id;
   }
   get visible() {
@@ -446,15 +483,16 @@ class xForm_Manager extends xUILog {
   #visible;
   #catalog;
   #id;
-  constructor(wrapper /*htmlElement*/, id=new xUITools().id) {
+  constructor(wrapper /*htmlElement*/, id = new xUITools().id) {
     //-> void
     super("xForm", id);
     this.#wrapper = wrapper;
     this.#visible = !(this.wrapper.style.display == "none");
     this.#catalog = {};
-    this.#id = id
+    this.#id = id;
   }
-  get id(){ //-> string
+  get id() {
+    //-> string
     return this.#id;
   }
   get data() {
@@ -509,7 +547,7 @@ class xHTMLPane extends xUILog {
   #element;
   #display;
   #id;
-  constructor(element /*htmlElement*/, id=new xUITools().id) {
+  constructor(element /*htmlElement*/, id = new xUITools().id) {
     //-> void
     super("xHTMLPane", id);
     this.#element = element;
@@ -518,7 +556,8 @@ class xHTMLPane extends xUILog {
     this.#visible = false;
     this.#id = id;
   }
-  get id(){ //-> string
+  get id() {
+    //-> string
     return this.#id;
   }
   get visible() {
@@ -548,14 +587,14 @@ class xHTMLPane_Trigger extends xUILog {
   #element;
   #event;
   #id;
-  constructor(element /*htmlElement*/, id=new xUITools().id) {
+  constructor(element /*htmlElement*/, id = new xUITools().id) {
     //-> void
     super("xHTMLPane_Trigger", id);
     this.#element = element;
     this.#event;
     this.#id = id;
   }
-  get id(){
+  get id() {
     return this.#id;
   }
   get element() {
@@ -576,14 +615,14 @@ class xHTMLPane_Manager extends xUILog {
   #catalog;
   #activePane;
   #id;
-  constructor(id=new xUITools().id) {
+  constructor(id = new xUITools().id) {
     //-> xHTMLPane_Manager
     super("xHTMLPane_Manger", id);
     this.#catalog = {};
     this.#activePane;
     this.#id = id;
   }
-  get id(){
+  get id() {
     return this.#id;
   }
   get activePane() {
@@ -624,14 +663,23 @@ class xOffCanvas extends xUILog {
   #endX;
   #dragging;
   #resizeLimit;
-  constructor(wrapper /*htmlElement*/, dismiss /*htmlElement*/, trigger /*htmlElement*/, id=new xUITools().id) {//->xHTMLOffCanvas;
+  constructor(
+    wrapper /*htmlElement*/,
+    dismiss /*htmlElement*/,
+    trigger /*htmlElement*/,
+    id = new xUITools().id
+  ) {
+    //->xHTMLOffCanvas;
     super("xHTMLOffCanvas", id);
     this.#wrapper = wrapper;
     this.#dismisses = [dismiss];
     this.#triggers = [trigger];
     this.#body = this.#wrapper;
     this.#id = id;
-    this.#drag = this.#wrapper.getElementsByClassName("offcanvas-resize").length > 0 ? this.#wrapper.getElementsByClassName("offcanvas-resize")[0] : null;
+    this.#drag =
+      this.#wrapper.getElementsByClassName("offcanvas-resize").length > 0
+        ? this.#wrapper.getElementsByClassName("offcanvas-resize")[0]
+        : null;
     this.#triggers[0].setAttribute("data-bs-toggle", "offcanvas");
     this.#triggers[0].setAttribute("data-bs-target", "#" + this.#id);
     this.#dismisses[0].getAttribute("data-bs-dismiss") == null
@@ -653,7 +701,7 @@ class xOffCanvas extends xUILog {
       this.#wrapper.style.display != "hidden"
     );
   }
-  get id(){
+  get id() {
     return this.#id;
   }
   get wrapper() {
@@ -749,7 +797,11 @@ class xEventListener extends xUILog {
   #event;
   #eventAction;
   #id;
-  constructor(element /*htmlElement*/, type /*string*/, id=new xUITools().id) {
+  constructor(
+    element /*htmlElement*/,
+    type /*string*/,
+    id = new xUITools().id
+  ) {
     //-> void
     super("xEventListener", id);
     this.#element = element;
@@ -758,7 +810,7 @@ class xEventListener extends xUILog {
     this.#event;
     this.#id = id;
   }
-  get id(){
+  get id() {
     return this.#id;
   }
   get element() {
@@ -795,8 +847,9 @@ class xModal extends xUILog {
   constructor(
     wrapper /*htmlElement*/,
     dismiss /*htmlElement*/,
-    trigger /*htmlElement*/
-  , id=new xUITools().id) {
+    trigger /*htmlElement*/,
+    id = new xUITools().id
+  ) {
     //->xModalCanvas;
     super("xModal", id);
     this.#wrapper = wrapper;
@@ -806,7 +859,9 @@ class xModal extends xUILog {
     this.#id = id;
     this.#triggers[0].setAttribute("data-bs-toggle", "modal");
     this.#triggers[0].setAttribute("data-bs-target", "#" + this.#id);
-    this.#dismisses[0].getAttribute("data-bs-dismiss") == null ? this.#dismisses[0].setAttribute("data-bs-dismiss", "modal") : "";
+    this.#dismisses[0].getAttribute("data-bs-dismiss") == null
+      ? this.#dismisses[0].setAttribute("data-bs-dismiss", "modal")
+      : "";
   }
   get visible() {
     //-> boolean
@@ -815,7 +870,7 @@ class xModal extends xUILog {
       this.#wrapper.style.display != "hidden"
     );
   }
-  get id(){
+  get id() {
     return this.#id;
   }
   get wrapper() {
@@ -860,7 +915,8 @@ class xCarousel extends xUILog {
   #slides;
   #indexForward;
   #indexBackward;
-  constructor(carouselWrapper /*htmlElement*/, id=new xUITools().id) {//-> xCarousel
+  constructor(carouselWrapper /*htmlElement*/, id = new xUITools().id) {
+    //-> xCarousel
     super("xCarousel", id);
     this.#id = id;
     this.#carouselWrapper = carouselWrapper;
@@ -895,7 +951,7 @@ class xCarousel extends xUILog {
       );
     }
   }
-  get id(){
+  get id() {
     return this.#id;
   }
   get activeSlide() {
@@ -929,77 +985,105 @@ class xCarousel extends xUILog {
 
 class xKeyLog extends xUILog {
   #catalog;
-  constructor(id=new xUITools().id /*(optional) string*/) { //xKeyLog
-    super('xKeyLog', id);
+  constructor(id = new xUITools().id /*(optional) string*/) {
+    //xKeyLog
+    super("xKeyLog", id);
     this.#catalog = {};
   }
-  get catalog(){ //-> JSON
+  get catalog() {
+    //-> JSON
     return this.#catalog;
   }
-  get toJSON(){ //-> string
+  get toJSON() {
+    //-> string
     let xPort = {};
-    Object.keys(this.#catalog).forEach((key)=>{
-        xPort[key] = this.#catalog[key].log;
+    Object.keys(this.#catalog).forEach((key) => {
+      xPort[key] = this.#catalog[key].log;
     });
     return JSON.stringify(xPort, undefined, 2);
   }
-  addListener(key /*string*/, listener /*xKeyListener*/) { //-> Void
-    this.#catalog[key] = listener; 
+  addListener(key /*string*/, listener /*xKeyListener*/) {
+    //-> Void
+    this.#catalog[key] = listener;
   }
-  
 }
 
-class xKeyListener extends xUILog{
-    //Citation: https://stackoverflow.com/questions/5203407/how-to-detect-if-multiple-keys-are-pressed-at-once-using-javascript
-    //Protions of this were taken conceptually from this answer on stack overflow
-   #target; #keys; #listenerDown; #listenerUp; #action; #log; #id; #catalog; #logAllKeys;
-  constructor( keyCodes=[] /*array*/, target=document/*htmlInputElement*/, id=new xUITools().id /*(optional) string*/) { //-> xKeyListener
-    super('xKeyListener', id);
+class xKeyListener extends xUILog {
+  //Citation: https://stackoverflow.com/questions/5203407/how-to-detect-if-multiple-keys-are-pressed-at-once-using-javascript
+  //Protions of this were taken conceptually from this answer on stack overflow
+  #target;
+  #keys;
+  #listenerDown;
+  #listenerUp;
+  #action;
+  #log;
+  #id;
+  #catalog;
+  #logAllKeys;
+  constructor(
+    keyCodes = [] /*array*/,
+    target = document /*htmlInputElement*/,
+    id = new xUITools().id /*(optional) string*/
+  ) {
+    //-> xKeyListener
+    super("xKeyListener", id);
     this.#target = target;
     this.#keys = keyCodes;
     this.#logAllKeys = false;
-    this.#listenerDown = new xEventListener(target, 'keydown');
-    this.#listenerUp = new xEventListener(target, 'keyup');
+    this.#listenerDown = new xEventListener(target, "keydown");
+    this.#listenerUp = new xEventListener(target, "keyup");
     this.#action = () => {};
     this.#catalog = {};
-    this.#log =[];
+    this.#log = [];
     this.#id = id;
   }
   get logAllKeys() {
     return this.#logAllKeys;
   }
-  get id(){
+  get id() {
     return this.#id;
   }
-  get log(){ // -> array
+  get log() {
+    // -> array
     return this.#log;
   }
-  set logAllKeys(value/*boolean*/){//-> void
+  set logAllKeys(value /*boolean*/) {
+    //-> void
     this.#logAllKeys = value;
-  } 
+  }
 
-  set action(value /*function*/){ //-> void
+  set action(value /*function*/) {
+    //-> void
     this.#action = value;
   }
-  setListener(){ //-> void
-    this.#listenerUp.eventAction = this.#listenerDown.eventAction = (e) =>{
-        let source =  this.#target.id || this.#target.tagName || this.#id;
-        let key = e.keyCode || e.which;
-        let keysPressed = 0;
-        this.#catalog[key] = (e.type =='keydown'); 
-        this.#keys.forEach((cKey)=>{
-            this.#catalog[cKey] == true ? keysPressed++: '';
-        });
-        if(this.#keys.length == keysPressed){
-            this.#action();
-            this.#log.push(new xUITools().seconds + ' '+ source + ' ' + String.fromCharCode(key));
-            this.#catalog = {};
-        }else{
-            if(this.#logAllKeys){
-                this.#log.push(new xUITools().seconds + ' '+ source + ' ' + String.fromCharCode(key));
-            }
+  setListener() {
+    //-> void
+    this.#listenerUp.eventAction = this.#listenerDown.eventAction = (e) => {
+      let source = this.#target.id || this.#target.tagName || this.#id;
+      let key = e.keyCode || e.which;
+      let keysPressed = 0;
+      this.#catalog[key] = e.type == "keydown";
+      this.#keys.forEach((cKey) => {
+        this.#catalog[cKey] == true ? keysPressed++ : "";
+      });
+      if (this.#keys.length == keysPressed) {
+        this.#action();
+        this.#log.push(
+          new xUITools().seconds + " " + source + " " + String.fromCharCode(key)
+        );
+        this.#catalog = {};
+      } else {
+        if (this.#logAllKeys) {
+          this.#log.push(
+            new xUITools().seconds +
+              " " +
+              source +
+              " " +
+              String.fromCharCode(key)
+          );
         }
-    }
+      }
+    };
     this.#listenerUp.setEvent();
     this.#listenerDown.setEvent();
   }
