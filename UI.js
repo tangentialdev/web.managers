@@ -164,6 +164,7 @@ class xUIThread extends xUILog {
   }
   get id() {
     //-> string
+    super.log(new Error("fetching property id: "+ this.#id))
     return this.#id;
   }
   get onComplete() {
