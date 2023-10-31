@@ -422,6 +422,7 @@ class xForm_Element extends xUILog {
     this.#visible = !(this.#element.parentNode.style.display == "none");
     this.#display = this.#element.parentNode.style.display;
     this.#id = id;
+    super.log(new Error("xFormElement class initialized"));
   }
   get id() {
     return this.#id;
