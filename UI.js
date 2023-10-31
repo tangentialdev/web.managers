@@ -219,38 +219,38 @@ class xHttpRequest extends xUILog {
   }
   get id() {
     //-> string
-    super.log(new Error("id fetched"));
+    super.log(new Error("id fetched " + this.#id));
     return this.#id;
   }
   get requestType() {
     //-> string
-    super.log(new Error("request type fetched"));
+    super.log(new Error("request type fetched: "+ this.#requestType));
     return this.#requestType;
   }
   get requestUrl() {
     //-> string
-    super.log(new Error("request url fetched"));
+    super.log(new Error("request url fetched: "+ this.#requestUrl));
     return this.#requestUrl;
   }
   get responseBody() {
     //-> function
-    super.log(new Error("response body fetched"));
+    super.log(new Error("response body fetched: "+ this.#responseBody));
     return this.#responseBody;
   }
   get data() {
     //-> string
-    super.log(new Error("data fetched"));
+    super.log(new Error("data fetched: " + this.#data));
     return this.#data;
   }
   get promise() {
     //-> promise
-    super.log("promise fetched");
+    super.log(new Error("promise fetched"));
     return this.#request;
   }
   set responseBody(value /*function*/) {
     //-> void
     this.#responseBody = value;
-    super.log(new Error("ResponseBody set"));
+    super.log(new Error("responseBody set"));
   }
   set data(value /*JSON*/) {
     //-> void
