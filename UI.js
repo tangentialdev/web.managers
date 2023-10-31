@@ -200,10 +200,12 @@ class xHttpRequest extends xUILog {
     super.log(new Error("xHttpRequest Object Initialized"));
   }
   get id(){ //-> string
+   super.log("id fetched");
     return this.#id;
   }
   get requestType() {
     //-> string
+    super.log("request type fetched");
     return this.#requestType;
   }
   get requestUrl() {
