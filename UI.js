@@ -424,10 +424,12 @@ class xForm_Element extends xUILog {
     this.#id = id;
     super.log(new Error("xFormElement class initialized"));
   }
-  get id() {
+  get id() {//-> string
+    super.log(new Error("fetching property id: "+ this.#id));
     return this.#id;
   }
-  get visible() {
+  get visible() { //-> boolean
+  super.log(new Error("fetching property visible: "+ this.#visible))
     return this.#visible;
   }
   get element() {
