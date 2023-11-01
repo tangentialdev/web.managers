@@ -330,7 +330,7 @@ class xExRef extends xUILog {
   }
   get parent() {
     //-> htmlElement
-    super.log(new Error("parent fetched: " this.#parent.tagName))
+    super.log(new Error("parent fetched: " + this.#parent.tagName))
     return this.#parent;
   }
   get element() {
