@@ -152,7 +152,7 @@ class xUIThread extends xUILog {
   #queue;
   #id;
   #onComplete;
-  constructor(id = new xUITools().id) {
+  constructor(id = new xUITools().id /*string*/) {
     //-> xUIThread
     super("xUIThread", id);
     this.#id = id;
