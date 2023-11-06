@@ -143,8 +143,17 @@ class xUILog {
 }
 
 class xUIThread extends xUILog {
+<<<<<<< HEAD
   #threadMain; #queue; #id; #onComplete;
   constructor(id = new xUITools().id /*string*/) {//-> xUIThread
+=======
+  #threadMain;
+  #queue;
+  #id;
+  #onComplete;
+  constructor(id = new xUITools().id /*string*/) {
+    //-> xUIThread
+>>>>>>> c84362c2d754178ad4eac2397c0a0fa2659aaff7
     super("xUIThread", id);
     this.#id = id;
     this.#threadMain = async () => {};
@@ -152,17 +161,32 @@ class xUIThread extends xUILog {
     this.#queue = [];
     super.log(new Error("Thread: " + this.#id + " Initialized"));
   }
+<<<<<<< HEAD
   get id() {//-> string
     super.log(new Error("fetching property--id: " + this.#id));
     return this.#id;
   }
   get onComplete() { //-> function
     super.log(new Error("fetching property--onComplete: " + this.#onComplete));
+=======
+  get id() {
+    //-> string
+    super.log(new Error("fetching property--id: " + this.#id));
+    return this.#id;
+  }
+  get onComplete() {
+    //-> function
+    super.log(new Error("fetching property--on Complete: " + this.#onComplete));
+>>>>>>> c84362c2d754178ad4eac2397c0a0fa2659aaff7
     return this.#onComplete;
   }
   set onComplete(value /*function*/) { //-> void
     this.#onComplete = value;
+<<<<<<< HEAD
     super.log(new Error("setting property--onComplete: " + this.#onComplete));
+=======
+    super.log(new Error("setting property--onComplete: " + value));
+>>>>>>> c84362c2d754178ad4eac2397c0a0fa2659aaff7
   }
   async add(arg /*function*/) { //-> void
     this.#queue.push(arg);
@@ -238,12 +262,21 @@ class xHttpRequest extends xUILog {
     this.#data = JSON.stringify(value);
     super.log(new Error("property set--data: " + this.#data));
   }
+<<<<<<< HEAD
   async send() { //-> void
+=======
+  async send() {
+    //-> void
+>>>>>>> c84362c2d754178ad4eac2397c0a0fa2659aaff7
     super.log(
       new Error(
         "sending request to: " +
           this.#requestUrl +
+<<<<<<< HEAD
           " of type: " +
+=======
+          "of type: " +
+>>>>>>> c84362c2d754178ad4eac2397c0a0fa2659aaff7
           this.#requestType +
           " with data: " +
           this.#data
@@ -298,22 +331,38 @@ class xExRef extends xUILog {
   }
   get src() {
     //-> string
+<<<<<<< HEAD
     super.log(new Error("property fetched--src: " + this.#src));
+=======
+    super.log(new Error("src fetched: " + this.#src));
+>>>>>>> c84362c2d754178ad4eac2397c0a0fa2659aaff7
     return this.#src;
   }
   get parent() {
     //-> htmlElement
+<<<<<<< HEAD
     super.log(new Error("property fetched--parent: " + this.#parent.tagName));
+=======
+    super.log(new Error("parent fetched: " + this.#parent.tagName));
+>>>>>>> c84362c2d754178ad4eac2397c0a0fa2659aaff7
     return this.#parent;
   }
   get element() {
     //-> htmlElement
+<<<<<<< HEAD
     super.log(new Error("property fetched--element: " + this.#element.tagName));
+=======
+    super.log(new Error("element fetched: " + this.#element.tagName));
+>>>>>>> c84362c2d754178ad4eac2397c0a0fa2659aaff7
     return this.#element;
   }
   get actionQueue() {
     //-> array
+<<<<<<< HEAD
     super.log(new Error("property fetched--actionQueue: " + this.#actionQueue));
+=======
+    super.log(new Error("action queue fetched: " + this.#actionQueue));
+>>>>>>> c84362c2d754178ad4eac2397c0a0fa2659aaff7
     return this.#actionQueue;
   }
   async addAction(value /*anonymous function */) {
@@ -328,7 +377,11 @@ class xExRef extends xUILog {
     this.#request.send().then(() => {
       this.#action()
         .then(() => {
+<<<<<<< HEAD
           super.log(new Error("External reference fetch complete"));
+=======
+          super.log(new Error("external reference complete"));
+>>>>>>> c84362c2d754178ad4eac2397c0a0fa2659aaff7
         })
         .catch((error) => {
           super.log(new Error(error));
@@ -401,12 +454,23 @@ class xForm_Element extends xUILog {
     this.#id = id;
     super.log(new Error("xFormElement class initialized"));
   }
+<<<<<<< HEAD
   get id() {//-> string
     super.log(new Error("fetching property--id: " + this.#id));
     return this.#id;
   }
   get visible() {//-> boolean
     super.log(new Error("fetching property--visible: " + this.#visible));
+=======
+  get id() {
+    //-> string
+    super.log(new Error("fetching property id: " + this.#id));
+    return this.#id;
+  }
+  get visible() {
+    //-> boolean
+    super.log(new Error("fetching property visible: " + this.#visible));
+>>>>>>> c84362c2d754178ad4eac2397c0a0fa2659aaff7
     return this.#visible;
   }
   get element() {//-> htmlElement
