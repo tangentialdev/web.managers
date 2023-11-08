@@ -4,7 +4,8 @@ class xQueueLog {
   #loggingEnabled;
   #log;
   #maxThreads;
-  constructor(oName /*string*/) { //need to add random tag to this
+  constructor(oName /*string*/) {
+    //need to add random tag to this
     this.#log = [];
     this.#oName = oName;
     this.#maxThreads = 0;
@@ -243,12 +244,6 @@ class xQueueConcurrent extends xQueueLog {
   }
 }
 
-class xQueueUnique{
-  constructor(oName='xQueueUnique'){
-    
-  }
-}
-
 /*DEMO ------------------------------------------------------------ */
 let onComplete = () => {
   console.log("QUEUE COMPLETE " + counter);
@@ -263,8 +258,8 @@ let testFunction = async () => {
   return id;
 };
 let counter = 0;
-function testQueueConcurrent() {
-  let queue = new xQueueConcurrent();
+function testQueue() {
+  let queue = new xQueue();
   for (i = 0; i < 10; i++) {
     queue.add(testFunction);
   }
@@ -276,4 +271,4 @@ function testQueueConcurrent() {
   }
 }
 
-testQueueConcurrent();
+testQueue();
