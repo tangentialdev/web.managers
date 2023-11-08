@@ -1,48 +1,59 @@
 class xQueueLog {
-  #oName; #frame; #loggingEnabled; #log; #maxThreads;
-  constructor(oName /*string*/) {
+  #oName;
+  #frame;
+  #loggingEnabled;
+  #log;
+  #maxThreads;
+  constructor(oName /*string*/) { //need to add random tag to this
     this.#log = [];
     this.#oName = oName;
     this.#maxThreads = 0;
     this.#loggingEnabled = configuration.QUEUE_LOGGING_ENABLED;
     this.#frame = document.createElement("div");
     this.#frame.innerHTML =
-    '<div class="accordion-item">' +
-          '<div class="accordion-header">' +
-              '<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#' + this.#oName +'">' +
-                    '<div class="row"  style="font-size:12px">' +
-                        '<div class="col name">'+ this.#oName +'</div>'+
-                         '<div class="col max-threads">Max Threads: 0</div>'+
-                          '<div class="col queue-length"> Queue Length: 0  </div>' +
-                          '<div class="col stage-length"> Stage Length: 0 </div>' +
-                     "</div>" +
-                "</button>" +
-          "</div>" +
-          '<div id="' + this.#oName + '" class="accordion-collapse collapse" data-bs-parent="#' + configuration.ERROR_LOG_DOCUMENT_ID + '">' +
-              '<div class="accordion-body">' +
-                  '<div class="row">' + 
-                    '<div class="col">' + 
-
-                  '<table class="table table-striped" style="font-size:10px">' +
-                    "<thead>" +
-                       "<tr>" +
-                          '<th style="display:none;"> Time</th>' +
-                          "<th> Trace </th>" +
-                          "<th> Message </th>" +
-                      "</tr>" +
-                    "</thead>" +
-                    '<tbody class="error-table-body">' +
-                    "</tbody>" +
-                "</table>" +
-              "</div>" +
-            "</div>" +
+      '<div class="accordion-item">' +
+      '<div class="accordion-header">' +
+      '<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#' +
+      this.#oName +
+      '">' +
+      '<div class="row"  style="font-size:12px">' +
+      '<div class="col name">' +
+      this.#oName +
+      "</div>" +
+      '<div class="col max-threads">Max Threads: 0</div>' +
+      '<div class="col queue-length"> Queue Length: 0  </div>' +
+      '<div class="col stage-length"> Stage Length: 0 </div>' +
+      "</div>" +
+      "</button>" +
+      "</div>" +
+      '<div id="' +
+      this.#oName +
+      '" class="accordion-collapse collapse" data-bs-parent="#' +
+      configuration.ERROR_LOG_DOCUMENT_ID +
+      '">' +
+      '<div class="accordion-body">' +
+      '<div class="row">' +
+      '<div class="col">' +
+      '<table class="table table-striped" style="font-size:10px">' +
+      "<thead>" +
+      "<tr>" +
+      '<th style="display:none;"> Time</th>' +
+      "<th> Trace </th>" +
+      "<th> Message </th>" +
+      "</tr>" +
+      "</thead>" +
+      '<tbody class="error-table-body">' +
+      "</tbody>" +
+      "</table>" +
+      "</div>" +
+      "</div>" +
       "</div>";
     this.#loggingEnabled
       ? document
           .getElementById(configuration.ERROR_LOG_DOCUMENT_ID)
           .appendChild(this.#frame)
       : "";
-      console.log(this.#loggingEnabled);
+    console.log(this.#loggingEnabled);
   }
   get toJSON() {
     return JSON.stringify(this.#log, undefined, 2);
@@ -59,16 +70,23 @@ class xQueueLog {
     //-> void
     this.#loggingEnabled = value;
   }
-  set queueLength(value /*int*/){ //-> void
-    this.#frame.getElementsByClassName("queue-length")[0].innerText = "Queue Length: "+ value;
+  set queueLength(value /*int*/) {
+    //-> void
+    this.#frame.getElementsByClassName("queue-length")[0].innerText =
+      "Queue Length: " + value;
   }
-  set stageLength(value /*int*/){ //-> void
-    this.#frame.getElementsByClassName("stage-length")[0].innerText = "Stage Length: "+ value;
+  set stageLength(value /*int*/) {
+    //-> void
+    this.#frame.getElementsByClassName("stage-length")[0].innerText =
+      "Stage Length: " + value;
   }
-  set maxThreads(value /*int*/){ //-> void
-    this.#frame.getElementsByClassName("max-threads")[0].innerText = "Max Threads: "+ value;
+  set maxThreads(value /*int*/) {
+    //-> void
+    this.#frame.getElementsByClassName("max-threads")[0].innerText =
+      "Max Threads: " + value;
   }
-  async log(msg /*string || JSON*/) {//-> void
+  async log(msg /*string || JSON*/) {
+    //-> void
     if (this.#loggingEnabled) {
       this.#log.push(
         new xUITools().seconds +
@@ -144,7 +162,8 @@ class xQueueConcurrent extends xQueueLog {
     super.log(new Error("fetching property--maxThreads: " + this.#maxThreads));
     return this.#maxThreads;
   }
-  get values(){//->array
+  get values() {
+    //->array
     super.log(new Error("fetching property--values: " + this.#values));
     return this.#values;
   }
@@ -174,7 +193,7 @@ class xQueueConcurrent extends xQueueLog {
   }
   async start() {
     //-> void
-    super.log(new Error("Starting Queue --maxthreads: " +this.#maxThreads));
+    super.log(new Error("Starting Queue --maxthreads: " + this.#maxThreads));
     super.queueLength = this.#queue.length;
     super.stageLength = this.#stage.length;
     this.#startfunction().then(() => {
@@ -183,16 +202,18 @@ class xQueueConcurrent extends xQueueLog {
   }
   async #cycle() {
     //- void
-    for (i=this.#queue.length; i< this.#maxThreads; i++){
+    for (i = this.#queue.length; i < this.#maxThreads; i++) {
       let f = this.#stage.shift();
       super.log(new Error("firing function: " + f));
-      let p = f().then((output)=>{
+      let p = f().then((output) => {
         this.#queue.splice(this.#queue.indexOf(p), 1);
-        if(this.#stage.length >0){
+        if (this.#stage.length > 0) {
           this.#cycle();
-        }else{
-          if(!this.#complete){
-            super.log(new Error("stage is empty -- moving to onComplete action"));
+        } else {
+          if (!this.#complete) {
+            super.log(
+              new Error("stage is empty -- moving to onComplete action")
+            );
             this.#awaitComplete();
           }
         }
@@ -200,13 +221,21 @@ class xQueueConcurrent extends xQueueLog {
       });
       this.#queue.push(p);
       this.#promises.push(p);
-      super.queueLength = this.#queue.length; super.stageLength = this.#stage.length;
-      super.log(new Error("Updated --queue.length: " + this.#queue.length + " --stage.length: " + this.#stage.length));
+      super.queueLength = this.#queue.length;
+      super.stageLength = this.#stage.length;
+      super.log(
+        new Error(
+          "Updated --queue.length: " +
+            this.#queue.length +
+            " --stage.length: " +
+            this.#stage.length
+        )
+      );
     }
   }
-  #awaitComplete(){
+  #awaitComplete() {
     this.#complete = true;
-    Promise.allSettled(this.#promises).then((values)=>{
+    Promise.allSettled(this.#promises).then((values) => {
       super.log(new Error("all Promises Settled -- values now accessible"));
       this.#values = values;
       this.#onComplete();
@@ -214,31 +243,37 @@ class xQueueConcurrent extends xQueueLog {
   }
 }
 
+class xQueueUnique{
+  constructor(oName='xQueueUnique'){
+    
+  }
+}
 
 /*DEMO ------------------------------------------------------------ */
 let onComplete = () => {
   console.log("QUEUE COMPLETE " + counter);
-}
+};
 
-let testFunction = async () => { //work on delaying response to prove they are true async
+let testFunction = async () => {
+  //work on delaying response to prove they are true async
   var id = new xUITools().id;
-  let timer = 10000*Math.random();
-  await new Promise(r => setTimeout(r, timer));
+  let timer = 10000 * Math.random();
+  await new Promise((r) => setTimeout(r, timer));
   counter++;
   return id;
-}
+};
 let counter = 0;
-function testQueue(){
+function testQueueConcurrent() {
   let queue = new xQueueConcurrent();
-  for (i=0; i < 10; i ++ ){
+  for (i = 0; i < 10; i++) {
     queue.add(testFunction);
   }
   queue.onComplete = onComplete;
   queue.start();
-  for (i=0; i < 10; i ++ ){
+  for (i = 0; i < 10; i++) {
     queue.add(testFunction);
     console.log("adding more functions");
   }
 }
 
-testQueue();
+testQueueConcurrent();
