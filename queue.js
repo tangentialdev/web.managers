@@ -123,7 +123,7 @@ class xQueueLog {
   }
 }
 
-class xQueueConcurrent extends xQueueLog {
+class xQueue extends xQueueLog {
   #oName;
   #queue;
   #stage;
