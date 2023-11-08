@@ -104,7 +104,7 @@ class xQueueLog {
   }
 }
 
-class xQueue extends xQueueLog {
+class xQueueConcurrent extends xQueueLog {
   #oName;
   #queue;
   #stage;
@@ -229,7 +229,7 @@ let testFunction = async () => { //work on delaying response to prove they are t
 }
 let counter = 0;
 function testQueue(){
-  let queue = new xQueue();
+  let queue = new xQueueConcurrent();
   for (i=0; i < 10; i ++ ){
     queue.add(testFunction);
   }
