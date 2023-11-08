@@ -133,14 +133,14 @@ class xQueue extends xQueueLog {
   #onComplete;
   #complete;
   #values;
-  constructor(oName = "xQueue" /*string*/) {
+  constructor(oName = "xQueue" /*string*/, maxThreads /*int*/) {
     super(oName);
     this.#oName = oName;
     this.#queue = [];
     this.#stage = [];
     this.#promises = [];
     this.#values = [];
-    this.#maxThreads = 2;
+    this.#maxThreads = maxThreads;
     super.maxThreads = this.#maxThreads;
     this.#complete = false;
     this.#startfunction = async () => {
