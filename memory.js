@@ -13,13 +13,12 @@ class xLocalStorage {
   }
   get keys() {
     this.#refresh();
-    return Object.keys
+    return Object.keys(this.#workingObj);
   }
   reset() {
     localStorage.setItem(this.#key, this.#obj);
   }
-  #refresh(){
-    this.#workingObj=JSON.parse(localStorage.getItem(this.#key));
+  #refresh() {
+    this.#workingObj = JSON.parse(localStorage.getItem(this.#key));
   }
-  
 }
