@@ -1,17 +1,25 @@
-class xLocalStorage{
-  #key; #obj;
+class xLocalStorage {
+  #key;
+  #baseObj;
+  #workingObj;
   constructor(key, obj) {
-    this.#key=key;
-    this.#obj = obj;
+    this.#key = key;
+    this.#obj = JSON.stringify(obj);
     localStorage.setItem(this.#key, this.#obj);
   }
-  get obj(){
-    return localStorage.getItem(this.#key);
+  get workingObj() {
+    this.#refresh();
+    return this.#workingObj;
   }
-  get keys(){
-    
+  get keys() {
+    this.#refresh();
+    return Object.keys
   }
-  reset(){
+  reset() {
     localStorage.setItem(this.#key, this.#obj);
   }
+  #refresh(){
+    this.#workingObj=JSON.parse(localStorage.getItem(this.#key));
+  }
+  
 }
