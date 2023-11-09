@@ -3,7 +3,7 @@ class xLocalStorage{
   constructor(key, obj) {
     this.#key=key;
     this.#obj = obj;
-    localStorage.add(this.#key, this.#obj);
+    localStorage.setItem(this.#key, this.#obj);
   }
   get obj(){
     return localStorage.getItem(this.#key);
@@ -12,6 +12,6 @@ class xLocalStorage{
     
   }
   reset(){
-    localStorage.add(this.#key, this.#obj);
+    localStorage.setItem(this.#key, this.#obj);
   }
 }
