@@ -18,8 +18,9 @@ class xLocalStorage {
   reset() {
     localStorage.setItem(this.#key, this.#obj);
   }
-  push(){
-    localStorage.setItem(this.#key, this.#workingObj);
+  push() {
+    localStorage.setItem(this.#key, JSON.stringify(this.#workingObj));
+    this.#refresh();
   }
   #refresh() {
     this.#workingObj = JSON.parse(localStorage.getItem(this.#key));
