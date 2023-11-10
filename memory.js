@@ -2,23 +2,23 @@ class xLocalStorage {
   #key;
   #baseObj;
   #workingObj;
-  constructor(key, obj) {
+  constructor(key, obj) { //->xLocalStorage
     this.#key = key;
     this.#baseObj = JSON.stringify(obj);
     localStorage.setItem(this.#key, this.#baseObj);
   }
-  get workingObj() {
+  get workingObj() { //-> JSON
     this.#refresh();
     return this.#workingObj;
   }
-  get keys() {
+  get keys() { //-> array
     this.#refresh();
     return Object.keys(this.#workingObj);
   }
-  reset() {
+  reset() { //->void
     localStorage.setItem(this.#key, this.#obj);
   }
-  push() {
+  push() { //->void
     localStorage.setItem(this.#key, JSON.stringify(this.#workingObj));
     this.#refresh();
   }
