@@ -106,14 +106,11 @@ class xUILog {
   async log(msg /*string || JSON*/) {
     //-> void
     if (this.#loggingEnabled) {
-      this.#log.push(
-        new xUITools().seconds +
-          " | " +
+      this.#log.push([new xUITools().seconds ,
           msg.stack
             .slice(msg.stack.lastIndexOf("/") + 1, msg.stack.length)
-            .replace(")", "") +
-          " | " +
-          msg.message
+            .replace(")", ""), 
+          msg.message]
       );
       let entry = document.createElement("tr");
       if (msg instanceof Error) {
@@ -1027,4 +1024,65 @@ class xKeyListener extends xUILog {
     this.#listenerDown.setEvent();
     super.log(new Error("xKeyListener set: " + this.#id));
   }
+}
+
+class xExport extends xUILog{
+    #type; #data; #element; #url; #fileName;
+    constructor(data /*array, JSON*/, type /*string*/, fileName /*string*/, id=new xUITools().id /*string*/){
+        super("xExport", id);
+        this.#data = data;
+        this.#type = type;
+        this.#fileName = fileName;
+        this.#url = 'No Url Set';
+        this.#element = document.createElement("a");
+        this.#element.style.display = "none";
+    }
+    get data(){ //-> JSON
+        super.log(new Error("fetching property --data: " + data));
+        return this.#data;
+    }
+    get type(){ //->string
+        super.log(new Error("fetching property --type: " + this.#type));
+        return this.#type;
+    }
+    get element(){ //-> htmlElement
+        super.log(new Error("fetching property --element: " + this.#element.tagName ));
+        return this.#element;
+    }
+    set element(value /*htmlElement*/){
+        this.#element = value;
+        super.log(new Error("property set --element: " + this.#element.tagName));
+    }
+    prepare(){
+        super.log(new Error("preparing file type: " + this.#type));
+        switch(this.#type){
+            case "json":
+                this.#prepare(JSON.stringify(this.#data), "application/json");
+                break;
+            case "text":
+                (typeof(this.#data) == "array") ? 
+                    this.#prepare(this.#data.join("\n"), "text/csv"):
+                    this.#prepare(this.#data.toString());
+                break;
+            case "csv":
+                let between = [...this.#data].join(",");
+                this.#prepare(between.join("\n"), "text/csv");
+                break;
+            default:
+                super.log(new Error("Type not recognized --type: " + this.#type))
+        }
+    }
+    download(){
+        this.#element.click();
+        super.log(new Error("file download link clicked"));
+    }
+    #prepare(sData, sType){
+        let blob = new Blob([sData], {type: sType});
+        this.#url = URL.createObjectURL(blob);
+        this.#element.href = this.#url;
+        this.#element.download = this.#fileName;
+        super.log(new Error("file perpared --ready for download"));
+    }
+
+
 }

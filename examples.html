@@ -417,9 +417,14 @@
             displayEvent.eventAction = ()=>{
                 dest.innerText = paneManager.toJSON;
                 dest.innerText+= offCanvas.toJSON;
+                let xPort = new xExport(paneManager.toJSON.concat(offCanvas.toJSON), "json", "example-download.json");
+                xPort.prepare();
+                xPort.download();
             };
             displayEvent.setEvent();
         </script>
+
+        
         <script src="queue.js"></script>
     </body>
 </html>
