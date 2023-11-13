@@ -333,15 +333,20 @@ class xExRef extends xUILog {
     //-> void
     super.log(new Error("fetching external reference... "));
     this.#request.responseBody = () => this.#responseBody(this.#request.data);
-    this.#request.send().then(() => {
-      this.#action()
-        .then(() => {
-          super.log(new Error("External reference fetch complete"));
-        })
-        .catch((error) => {
-          super.log(new Error(error));
-        });
-    });
+    this.#request
+      .send()
+      .then(() => {
+        this.#action()
+          .then(() => {
+            super.log(new Error("External reference fetch complete"));
+          })
+          .catch((error) => {
+            super.log(new Error(error));
+          });
+      })
+      .catch((error) => {
+        super.log(error);
+      });
   }
   #responseBody(data /*string*/) {
     // -> void
