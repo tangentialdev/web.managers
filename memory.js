@@ -1,31 +1,24 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-undef */
 class xLocalStorage {
   #key;
   #baseObj;
   #workingObj;
-  constructor(key, obj) {
-    //->xLocalStorage
+  constructor(key, obj) { //->xLocalStorage
     this.#key = key;
     this.#baseObj = JSON.stringify(obj);
     localStorage.setItem(this.#key, this.#baseObj);
   }
-  get workingObj() {
-    //-> JSON
+  get workingObj() { //-> JSON
     this.#refresh();
     return this.#workingObj;
   }
-  get keys() {
-    //-> array
+  get keys() { //-> array
     this.#refresh();
     return Object.keys(this.#workingObj);
   }
-  reset() {
-    //->void
+  reset() { //->void
     localStorage.setItem(this.#key, this.#obj);
   }
-  push() {
-    //->void
+  push() { //->void
     localStorage.setItem(this.#key, JSON.stringify(this.#workingObj));
     this.#refresh();
   }
