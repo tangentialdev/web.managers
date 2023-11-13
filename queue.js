@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 class xQueueLog {
   #oName;
   #frame;
@@ -49,11 +50,7 @@ class xQueueLog {
       "</div>" +
       "</div>" +
       "</div>";
-    this.#loggingEnabled
-      ? document
-          .getElementById(configuration.ERROR_LOG_DOCUMENT_ID)
-          .appendChild(this.#frame)
-      : "";
+    this.#loggingEnabled ? document.getElementById(configuration.ERROR_LOG_DOCUMENT_ID).appendChild(this.#frame) : "";
     console.log(this.#loggingEnabled);
   }
   get toJSON() {
@@ -73,18 +70,15 @@ class xQueueLog {
   }
   set queueLength(value /*int*/) {
     //-> void
-    this.#frame.getElementsByClassName("queue-length")[0].innerText =
-      "Queue Length: " + value;
+    this.#frame.getElementsByClassName("queue-length")[0].innerText = "Queue Length: " + value;
   }
   set stageLength(value /*int*/) {
     //-> void
-    this.#frame.getElementsByClassName("stage-length")[0].innerText =
-      "Stage Length: " + value;
+    this.#frame.getElementsByClassName("stage-length")[0].innerText = "Stage Length: " + value;
   }
   set maxThreads(value /*int*/) {
     //-> void
-    this.#frame.getElementsByClassName("max-threads")[0].innerText =
-      "Max Threads: " + value;
+    this.#frame.getElementsByClassName("max-threads")[0].innerText = "Max Threads: " + value;
   }
   async log(msg /*string || JSON*/) {
     //-> void
@@ -92,9 +86,7 @@ class xQueueLog {
       this.#log.push(
         new xUITools().seconds +
           " | " +
-          msg.stack
-            .slice(msg.stack.lastIndexOf("/") + 1, msg.stack.length)
-            .replace(")", "") +
+          msg.stack.slice(msg.stack.lastIndexOf("/") + 1, msg.stack.length).replace(")", "") +
           " | " +
           msg.message
       );
@@ -105,9 +97,7 @@ class xQueueLog {
           new xUITools().seconds +
           "</td>" +
           "<td>" +
-          msg.stack
-            .slice(msg.stack.lastIndexOf("/") + 1, msg.stack.length)
-            .replace(")", "") +
+          msg.stack.slice(msg.stack.lastIndexOf("/") + 1, msg.stack.length).replace(")", "") +
           "</td>" +
           '<td style="overflow-y:scroll;display:block;">' +
           msg.message +
@@ -116,9 +106,7 @@ class xQueueLog {
         entry.setAttribute("colspan", 3);
         entry.innerHTML = msg;
       }
-      this.#frame
-        .getElementsByClassName("error-table-body")[0]
-        .appendChild(entry);
+      this.#frame.getElementsByClassName("error-table-body")[0].appendChild(entry);
     }
   }
 }
@@ -212,9 +200,7 @@ class xQueue extends xQueueLog {
           this.#cycle();
         } else {
           if (!this.#complete) {
-            super.log(
-              new Error("stage is empty -- moving to onComplete action")
-            );
+            super.log(new Error("stage is empty -- moving to onComplete action"));
             this.#awaitComplete();
           }
         }
@@ -224,14 +210,7 @@ class xQueue extends xQueueLog {
       this.#promises.push(p);
       super.queueLength = this.#queue.length;
       super.stageLength = this.#stage.length;
-      super.log(
-        new Error(
-          "Updated --queue.length: " +
-            this.#queue.length +
-            " --stage.length: " +
-            this.#stage.length
-        )
-      );
+      super.log(new Error("Updated --queue.length: " + this.#queue.length + " --stage.length: " + this.#stage.length));
     }
   }
   #awaitComplete() {
