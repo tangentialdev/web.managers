@@ -1,5 +1,7 @@
 /* eslint-disable no-undef */
-class xQueueLog {
+import { xConfiguration } from "./configuration";
+import { xUITools } from "./UI";
+export class xQueueLog {
   #oName;
   #frame;
   #loggingEnabled;
@@ -10,7 +12,7 @@ class xQueueLog {
     this.#log = [];
     this.#oName = oName;
     this.#maxThreads = 0;
-    this.#loggingEnabled = configuration.QUEUE_LOGGING_ENABLED;
+    this.#loggingEnabled = new xConfiguration().QUEUE_LOGGING_ENABLED;
     this.#frame = document.createElement("div");
     this.#frame.innerHTML =
       '<div class="accordion-item">' +
@@ -31,7 +33,7 @@ class xQueueLog {
       '<div id="' +
       this.#oName +
       '" class="accordion-collapse collapse" data-bs-parent="#' +
-      configuration.ERROR_LOG_DOCUMENT_ID +
+      new xConfiguration().ERROR_LOG_DOCUMENT_ID +
       '">' +
       '<div class="accordion-body">' +
       '<div class="row">' +
@@ -50,8 +52,9 @@ class xQueueLog {
       "</div>" +
       "</div>" +
       "</div>";
-    this.#loggingEnabled ? document.getElementById(configuration.ERROR_LOG_DOCUMENT_ID).appendChild(this.#frame) : "";
-    console.log(this.#loggingEnabled);
+    this.#loggingEnabled
+      ? document.getElementById(new xConfiguration().ERROR_LOG_DOCUMENT_ID).appendChild(this.#frame)
+      : "";
   }
   get toJSON() {
     return JSON.stringify(this.#log, undefined, 2);
@@ -111,7 +114,7 @@ class xQueueLog {
   }
 }
 
-class xQueue extends xQueueLog {
+export class xQueue extends xQueueLog {
   #oName;
   #queue;
   #stage;
@@ -131,6 +134,7 @@ class xQueue extends xQueueLog {
     this.#maxThreads = maxThreads;
     super.maxThreads = this.#maxThreads;
     this.#complete = false;
+    this.#onComplete = () => {};
     this.#startfunction = async () => {
       console.log(" no start function set");
     };
@@ -191,7 +195,7 @@ class xQueue extends xQueueLog {
   }
   async #cycle() {
     //- void
-    for (i = this.#queue.length; i < this.#maxThreads; i++) {
+    for (var i = this.#queue.length; i < this.#maxThreads; i++) {
       let f = this.#stage.shift();
       super.log(new Error("firing function: " + f));
       let p = f().then((output) => {
@@ -224,30 +228,30 @@ class xQueue extends xQueueLog {
 }
 
 /*DEMO ------------------------------------------------------------ */
-let onComplete = () => {
-  console.log("QUEUE COMPLETE " + counter);
-};
+// let onComplete = () => {
+//   console.log("QUEUE COMPLETE " + counter);
+// };
 
-let testFunction = async () => {
-  //work on delaying response to prove they are true async
-  var id = new xUITools().id;
-  let timer = 10000 * Math.random();
-  await new Promise((r) => setTimeout(r, timer));
-  counter++;
-  return id;
-};
-let counter = 0;
-function testQueue() {
-  let queue = new xQueue();
-  for (i = 0; i < 10; i++) {
-    queue.add(testFunction);
-  }
-  queue.onComplete = onComplete;
-  queue.start();
-  for (i = 0; i < 10; i++) {
-    queue.add(testFunction);
-    console.log("adding more functions");
-  }
-}
+// let testFunction = async () => {
+//   //work on delaying response to prove they are true async
+//   var id = new xUITools().id;
+//   let timer = 10000 * Math.random();
+//   await new Promise((r) => setTimeout(r, timer));
+//   counter++;
+//   return id;
+// };
+// let counter = 0;
+// function testQueue() {
+//   let queue = new xQueue();
+//   for (i = 0; i < 10; i++) {
+//     queue.add(testFunction);
+//   }
+//   queue.onComplete = onComplete;
+//   queue.start();
+//   for (i = 0; i < 10; i++) {
+//     queue.add(testFunction);
+//     console.log("adding more functions");
+//   }
+// }
 
-testQueue();
+// testQueue();

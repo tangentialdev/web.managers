@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-class xLocalStorage {
+export class xLocalStorage {
   #key;
   #baseObj;
   #workingObj;
@@ -22,7 +22,7 @@ class xLocalStorage {
   }
   reset() {
     //->void
-    localStorage.setItem(this.#key, this.#obj);
+    localStorage.setItem(this.#key, this.#baseObj);
   }
   push() {
     //->void
