@@ -337,6 +337,12 @@ export class xExRef extends xUILog {
     //->void
     this.#parent = value;
   }
+  async hide() {
+    this.#element.style.display = "none";
+  }
+  async show() {
+    this.#element.style.display = "";
+  }
   async addAction(value /*anonymous function */) {
     //-> void
     super.log(new Error("added to action queue: " + value));
@@ -889,6 +895,10 @@ export class xEventListener extends xUILog {
     super.log(new Error("fetching property--type: " + this.#type));
     return this.#type;
   }
+  set element(value /*htmlElement*/) {
+    //->void
+    this.#element = value;
+  }
   get eventAction() {
     //-> function
     super.log(new Error("fetching property--eventAction: " + this.#eventAction));
@@ -1266,5 +1276,54 @@ export class xWindow extends xUILog {
         super.log(error);
       });
     super.log(new Error("waiting for and running: " + promises + " " + onComplete));
+  }
+}
+
+class xContextMenu extends xUILog {
+  #element;
+  #visible;
+  #contextEvent;
+  #parent;
+  constructor(parent /*(htmlElement*/, element /*htmlElement*/, id = new xUITools().id /*string*/) {
+    //->xConextMenu
+    super("xContextMenu", id);
+    this.#parent = parent;
+    this.#element = element;
+    this.#visible = this.#element.style.display == "none";
+    this.#element.style.position = "absolute";
+    this.#contextEvent = new xEventListener(parent, "contextmenu");
+    window.addEventListener("click", () => {
+      this.hide();
+    });
+  }
+  get event() {
+    return this.#contextEvent;
+  }
+  get parent() {
+    return this.#parent;
+  }
+  get element() {
+    //-> htmlElement
+    return this.#element;
+  }
+  get visible() {
+    //-> boolean
+    return this.#visible;
+  }
+  set parent(value /*htmlElement*/) {
+    //-> void
+    this.#parent = value;
+  }
+  set element(value /*htmlElement*/) {
+    //-> void
+    this.#element = value;
+  }
+  show() {
+    this.#element.display = "";
+    this.#visible = true;
+  }
+  hide() {
+    this.#element.display = "none";
+    this.#visible = false;
   }
 }
