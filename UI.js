@@ -709,11 +709,12 @@ export class xHTMLPane_Manager extends xUILog {
     super.log(new Error("fetching item--id: " + key));
     return this.#catalog[key];
   }
-  async setItem(key /*string*/, trigger /*xHTMLPane_Trigger*/, pane /*xHTMLPane*/) {
+  async setItem(key /*string*/, trigger /*xHTMLPane_Trigger*/, pane /*xHTMLPane*/, activeClass = "" /*string*/) {
     //-> void
     this.#catalog[key] = {
       trigger: trigger,
       pane: pane,
+      activeClass: activeClass,
     };
     this.#catalog[key]["trigger"].element.addEventListener("click", () => {
       this.activate(key);
@@ -722,8 +723,13 @@ export class xHTMLPane_Manager extends xUILog {
   }
   async activate(key /*string*/) {
     //-> void
-    this.#activePane != null ? this.#activePane["pane"].hide() : "";
+    let activeClass = this.#catalog[key]["activeClass"];
+    if (this.#activePane != null) {
+      this.#activePane["pane"].hide();
+      activeClass != "" ? this.#activePane["trigger"].element.classList.remove(activeClass) : "";
+    }
     this.#catalog[key]["pane"].activate();
+    activeClass != "" ? this.#catalog[key]["trigger"].element.classList.add(activeClass) : "";
     this.#activePane = this.#catalog[key];
     super.log(new Error("xHTMLPane activated with id:" + key));
   }
@@ -1279,11 +1285,12 @@ export class xWindow extends xUILog {
   }
 }
 
-class xContextMenu extends xUILog {
+export class xContextMenu extends xUILog {
   #element;
   #visible;
   #contextEvent;
   #parent;
+  #secondaryAction;
   constructor(parent /*(htmlElement*/, element /*htmlElement*/, id = new xUITools().id /*string*/) {
     //->xConextMenu
     super("xContextMenu", id);
@@ -1291,6 +1298,9 @@ class xContextMenu extends xUILog {
     this.#element = element;
     this.#visible = this.#element.style.display == "none";
     this.#element.style.position = "absolute";
+    this.#element.style.top = "0";
+    this.#element.style.left = "0";
+    this.#secondaryAction = () => {};
     this.#contextEvent = new xEventListener(parent, "contextmenu");
     window.addEventListener("click", () => {
       this.hide();
@@ -1312,18 +1322,30 @@ class xContextMenu extends xUILog {
   }
   set parent(value /*htmlElement*/) {
     //-> void
+    this.#contextEvent.element = value;
     this.#parent = value;
   }
   set element(value /*htmlElement*/) {
     //-> void
     this.#element = value;
   }
+  set secondaryAction(value) {
+    //->void
+    this.#secondaryAction = value;
+  }
+  activate() {
+    this.#contextEvent.eventAction = (e) => {
+      e.preventDefault();
+      this.#secondaryAction(e);
+    };
+    this.#contextEvent.setEvent();
+  }
   show() {
-    this.#element.display = "";
+    this.#element.style.display = "";
     this.#visible = true;
   }
   hide() {
-    this.#element.display = "none";
+    this.#element.style.display = "none";
     this.#visible = false;
   }
 }
