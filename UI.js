@@ -1291,6 +1291,7 @@ export class xContextMenu extends xUILog {
   #contextEvent;
   #parent;
   #secondaryAction;
+  #e;
   constructor(parent /*(htmlElement*/, element /*htmlElement*/, id = new xUITools().id /*string*/) {
     //->xConextMenu
     super("xContextMenu", id);
@@ -1325,6 +1326,10 @@ export class xContextMenu extends xUILog {
     this.#contextEvent.element = value;
     this.#parent = value;
   }
+  set e(value /*event*/) {
+    //-> void;
+    this.#e = value;
+  }
   set element(value /*htmlElement*/) {
     //-> void
     this.#element = value;
@@ -1335,6 +1340,7 @@ export class xContextMenu extends xUILog {
   }
   activate() {
     this.#contextEvent.eventAction = (e) => {
+      this.#e = e;
       e.preventDefault();
       this.#secondaryAction(e);
     };
@@ -1342,6 +1348,8 @@ export class xContextMenu extends xUILog {
   }
   show() {
     this.#element.style.display = "";
+    this.#element.style.top = this.#e.clientY - this.#element.offsetHeight;
+    this.#element.style.left = this.#e.clientX - this.#element.offsetWidth / 2;
     this.#visible = true;
   }
   hide() {
